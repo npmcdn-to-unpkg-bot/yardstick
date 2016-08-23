@@ -4,7 +4,7 @@ import SignIn from '../components/auth/signIn';
 import SignUp from '../components/auth/signUp';
 import { Link, browserHistory } from 'react-router';
 import superagent from 'superagent';
-
+require('../stylesheets/main.scss');
 class Home extends Component{
   constructor(props) {
     super(props);
