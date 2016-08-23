@@ -1,0 +1,196 @@
+.signInForm{
+  background-color: transparent;
+  span{
+    float: right;
+    background-color: #EEE;
+    border-radius: 100%;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  form{
+    padding: 10px;
+    border-radius: 5px;
+
+    background-color: #EEE;
+    .input-field{
+      margin: 5px 0;
+    }
+    label{
+      display: block;
+    }
+  }
+}
+
+.imageGallery{
+  width: 100%;
+  overflow-x: scroll;
+  img{
+    display: inline-block;
+    width: 300px;
+    margin: 20px;
+  }
+}
+
+.signInFormInt{
+  width: 50%;
+  margin: 20px auto;
+}
+
+.signUpFormInt{
+  width: 50%;
+  margin: 20px auto;
+}
+
+.signUpForm{
+  background-color: transparent;
+  span{
+    float: right;
+    background-color: #EEE;
+    border-radius: 100%;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  form{
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #EEE;
+    .input-field{
+      margin: 5px 0;
+    }
+    label{
+      display: block;
+    }
+  }
+}
+
+.hoverExp{
+  width: 600px;
+  h5{
+    cursor: pointer;
+    font-size: 18px;
+    text-decoration: underline;
+  }
+}
+.about-link{
+    float: right;
+    margin: 30px;
+    font-size: 18px;
+    color: black;
+}
+.homePage{
+  height: 100vh;
+  background-image: url("https://hd.unsplash.com/photo-1414394825544-67fa8e8e28ea");
+  background-size: 100%;
+  padding: 15%;
+  h3{
+    margin: 0 0 100px 0;
+    text-align: center;
+  }
+}
+
+.aboutPage{
+  height: 100vh;
+  background-image: url("https://hd.unsplash.com/photo-1446478129398-42db46ee0475");
+  background-size: 100%;
+  padding: 15%;
+  h3{
+    margin: 0 0 100px 0;
+    text-align: center;
+  }
+}
+
+.welcomeInfo{
+  text-align: center;
+}
+
+.home-buttons{
+  text-align: center;
+  button{
+    width: 100px;
+    height: 40px;
+    margin: 10px;
+    border: 3px solid black;
+    background-color: transparent;
+    font-size: 16px;
+  }
+}
+.navbar .navbar-default{
+  margin-bottom: 0;
+}
+
+.nav{
+  a{
+    color: #777;
+    line-height: 50px;
+    vertical-align: middle;
+    margin: 0 15px;
+  }
+}
+
+.map{
+  width: 1000px;
+  display: block;
+  margin: 50px auto;
+}
+
+.singleMap{
+  vertical-align: top;
+  display: inline-block;
+  width: 40%;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.availableDates{
+  vertical-align: top;
+  display: inline-block;
+  width: 60%;
+  padding: 20px;
+}
+#convoBox{
+  height: 600px;
+  overflow-y: scroll;
+}
+.ownerMsg{
+  display: inline-block;
+  width: 50%;
+  vertical-align: top;
+}
+.otherMsg{
+  display: inline-block;
+  width: 50%;
+  vertical-align: top;
+}
+.msgForm{
+  width: 50%;
+  float: right;
+  margin: 20px 0;
+  textarea{
+    display: block;
+    width: 100%;
+    height: 150px;
+  }
+}
+#hover{
+  position: fixed;
+  z-index: 999;
+  background-color: #EEE;
+  height: 300px;
+}
+
+#mapid{
+  height: 480px;
+}
+.imgRow{
+  z-index: 999;
+  overflow-x: scroll;
+  width: 100%;
+  height: 500px;
+  overflow-y: hidden;
+  img{
+    display: inline-block;
+    max-width: 45%;
+    margin: 2.5%;
+  }
+
+}
