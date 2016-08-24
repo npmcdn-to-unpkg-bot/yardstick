@@ -16,4 +16,6 @@
 */
 
 const Route = use('Route')
-Route.get('/signUp', 'ExperienceController.signUp');
+Route
+  .get('/signUp', 'UserController.signUp')
+  .middleware('auth:basic')

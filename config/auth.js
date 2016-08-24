@@ -65,7 +65,10 @@ module.exports = {
     serializer: 'Lucid',
     model: 'App/Model/User',
     scheme: 'jwt',
-    secret: Config.get('app.appKey')
+    secret: Config.get('app.appKey'),
+    options: {
+      expiresIn: 100000
+    }
   },
 
   /*
