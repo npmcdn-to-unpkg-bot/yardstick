@@ -64,28 +64,32 @@ class Home extends Component{
 
   signUp(e) {
     e.preventDefault();
-    let { dispatch, form } = this.props;
-
-    var geocoder = new google.maps.Geocoder();
-    geocoder.geocode({ 'address': form.signUp.address.value}, function(res, status) {
-      if(status == 'OK') {
-        let user = {
-          email: form.signUp.email.value,
-          password: form.signUp.password.value,
-          profile: {
-            firstName: form.signUp.firstName.value,
-            lastName: form.signUp.lastName.value,
-            address: form.signUp.address.value,
-            latitude: res[0].geometry.viewport.f.b,
-            longitude: res[0].geometry.viewport.b.b,
-          }
-        }
-        dispatch({
-          type: 'SIGN_UP',
-          payload: user
-        });
-      }
-    });
+    superagent
+      .get('http://localhost:3333/signUp')
+      .end((err, res) => console.log(res))
+    // e.preventDefault();
+    // let { dispatch, form } = this.props;
+    //
+    // var geocoder = new google.maps.Geocoder();
+    // geocoder.geocode({ 'address': form.signUp.address.value}, function(res, status) {
+    //   if(status == 'OK') {
+    //     let user = {
+    //       email: form.signUp.email.value,
+    //       password: form.signUp.password.value,
+    //       profile: {
+    //         firstName: form.signUp.firstName.value,
+    //         lastName: form.signUp.lastName.value,
+    //         address: form.signUp.address.value,
+    //         latitude: res[0].geometry.viewport.f.b,
+    //         longitude: res[0].geometry.viewport.b.b,
+    //       }
+    //     }
+    //     dispatch({
+    //       type: 'SIGN_UP',
+    //       payload: user
+    //     });
+    //   }
+    // });
   }
 
   render() {

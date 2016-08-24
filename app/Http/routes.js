@@ -16,8 +16,4 @@
 */
 
 const Route = use('Route')
-
-Route.on('/').render('welcome')
-Route.get('/', function * (request, response) {
-  response.send('You are looking at the about page')
-});
+Route.get('/signUp', 'ExperienceController.signUp');
