@@ -19,3 +19,5 @@ const Route = use('Route')
 Route
   .get('/signUp', 'UserController.signUp')
   .middleware('auth:basic')
+
+Route.get('/users', 'UserController.index')

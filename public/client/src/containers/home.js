@@ -22,6 +22,9 @@ class Home extends Component{
       logInBtn: true,
       signUpBtn: true
     });
+    superagent
+    .get('http://localhost:3333/users')
+    .end((err, res) => console.log(res))
   }
 
   dismiss() {

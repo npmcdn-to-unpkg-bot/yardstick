@@ -1,6 +1,12 @@
 'use strict'
+const Database = use('Database')
 
 class UserController {
+  * index (request, response) {
+        const users = yield Database.select().from('users')
+        response.json(users)
+    }
+
   * signUp (request, response) {
     response.send('yarrrrr')
   }
