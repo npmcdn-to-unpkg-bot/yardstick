@@ -6,6 +6,16 @@ import { GoogleMapLoader, GoogleMap, Marker, InfoWindow } from "react-google-map
 import HoverExp from '../components/experiences/expHover';
 import { browserHistory } from 'react-router';
 import ChangeModal from '../components/welcome/changeModal';
+var Rebase = require('re-base');
+
+var config = {
+  apiKey: "AIzaSyAthBCq_uopCnlQn27DbBmQrHQVEJVfKRo",
+  authDomain: "outdoors-1380.firebaseapp.com",
+  databaseURL: "https://outdoors-1380.firebaseio.com",
+  storageBucket: "outdoors-1380.appspot.com",
+};
+
+var base = Rebase.createClass(config);
 
 class Welcome extends Component {
   constructor(props) {
@@ -25,12 +35,6 @@ class Welcome extends Component {
       changeModal: false
     });
 
-    // Meteor.call('getExpByLocation', function (err, res) {
-    //   dispatch({
-    //     type: 'GET_EXPERIENCES_SUCCESS',
-    //     experiences: res
-    //   });
-    // });
     if ("geolocation" in navigator) {
       /* geolocation is available */
       navigator.geolocation.getCurrentPosition(function(position) {
@@ -54,19 +58,29 @@ class Welcome extends Component {
     }
   }
 
+  componentDidMount() {
+    base.syncState(`experiences`, {
+      context: this,
+      state: 'experiences',
+      asArray: true
+    });
+  }
+
   hover(marker) {
-    let { dispatch, experiences } = this.props;
+    let { dispatch } = this.props;
+    let experiences = this.state.experiences;
+
     let newArray = experiences.map((exp) => {
       if(exp._id === marker._id) {
-        console.log('found it')
-        newObj = {};
+        console.log('found it');
+        let newObj = {};
         Object.assign(newObj, exp)
         newObj.showInfo = true;
         return newObj;
       } else {
         return exp;
       }
-    })
+    });
 
     dispatch({
       type: 'HOVER',
@@ -147,13 +161,38 @@ class Welcome extends Component {
 
   render(){
     let exp;
+    let markerSection;
 
-    if(this.props.experiences.length > 0) {
-      exp = this.props.experiences.map((exp) => {
+
+    if(this.state.experiences && this.state.experiences.length > 0) {
+      exp = this.state.experiences.map((exp) => {
         return <div key={exp._id}><Link to={"/experiences/" + exp._id }>{exp.title}</Link></div>
       })
     } else {
       exp = <div>Loading experiences...</div>
+    }
+
+    if(this.state.experiences && this.state.experiences.length > 0) {
+      console.log('experiences yayyy: ', this.state.experiences)
+      markerSection = (
+        this.state.experiences.map((marker, index) => {
+
+          let pos = {
+            lat: marker.latitude,
+            lng: marker.longitude
+          }
+          return (
+            <Marker
+            position={pos}
+            key={marker._id}
+            onMouseover={this.hover.bind(null, marker)}>
+            {marker.showInfo ? this.showDetail(marker) : null}
+            </Marker>
+            );
+          })
+      )
+    } else {
+      markerSection = null;
     }
 
       return(
@@ -169,34 +208,16 @@ class Welcome extends Component {
 
         <div style={{ height: 1000 }} className="map">
         <GoogleMapLoader
-        containerElement={
-          <div style={{ height: `100%`  }} />
-        }
+        containerElement={<div style={{ height: `100%`  }} />}
         googleMapElement={
           <GoogleMap
           ref={(map) => console.log(map)}
           defaultZoom={10}
           center={{ lat: this.props.location.latitude, lng: this.props.location.longitude }}
           >
-          {this.props.experiences.map((marker, index) => {
-            let pos = {
-              lat: marker.latitude,
-              lng: marker.longitude
-            }
-            return (
-              <Marker
-              position={pos}
-              key={marker._id}
-              onMouseover={this.hover.bind(null, marker)}>
-
-              {marker.showInfo ? this.showDetail(marker) : null}
-
-
-              </Marker>
-            );
-          })}
+            {markerSection}
           </GoogleMap>
-        }
+          }
         />
         </div>
         {exp}

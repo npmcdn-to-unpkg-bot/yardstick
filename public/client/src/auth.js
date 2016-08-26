@@ -1,3 +1,5 @@
+import { browserHistory } from 'react-redux';
+
 function authenticate(store) {
   firebase.auth().onAuthStateChanged(function(user) {
   if (user) {

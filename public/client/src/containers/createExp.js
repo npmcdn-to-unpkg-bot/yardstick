@@ -37,7 +37,7 @@ class CreateExp extends Component {
 
   createExp(e) {
     e.preventDefault();
-    let { dispatch, form, dates, images } = this.props;
+    let { dispatch, form, dates, images, user } = this.props;
     var geocoder = new google.maps.Geocoder();
     geocoder.geocode({ 'address': form.address.value + ',' + form.city.value + ',' + form.state.value}, function(res, status) {
       if(status == 'OK') {
@@ -53,7 +53,7 @@ class CreateExp extends Component {
             zip: form.zip.value,
             longitude: res[0].geometry.viewport.b.b,
             latitude: res[0].geometry.viewport.f.b,
-            user: Meteor.user()._id,
+            user: user.uid,
             dates: {
               unavailableDates: dates.unavailableDates
             }
@@ -80,12 +80,13 @@ class CreateExp extends Component {
 
         </div>
       )
-  
+
   }
 }
 
 function mapStateToProps(state) {
   return {
+    user: state.auth.user,
     form: state.form.createForm,
     dates: state.experiences.singleExperience.dates,
     images: state.experiences.images

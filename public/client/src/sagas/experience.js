@@ -1,6 +1,17 @@
 import { takeEvery, takeLatest } from 'redux-saga';
 import { call, put, fork } from 'redux-saga/effects';
 import { browserHistory } from 'react-router';
+var Rebase = require('re-base');
+
+var config = {
+  apiKey: "AIzaSyAthBCq_uopCnlQn27DbBmQrHQVEJVfKRo",
+  authDomain: "outdoors-1380.firebaseapp.com",
+  databaseURL: "https://outdoors-1380.firebaseio.com",
+  storageBucket: "outdoors-1380.appspot.com",
+};
+
+var base = Rebase.createClass(config);
+
 
 function* confirmRes(action) {
   console.log('action: ', action)
@@ -97,9 +108,10 @@ function* getSingleExp(action) {
 }
 
 function* createExp(action) {
+  console.log('exp: ', action);
   try {
-    const exp = yield Experiences.insert(action.payload)
-    browserHistory.push('/welcome')
+    yield firebase.database().ref('experiences').push(action.payload);
+    yield browserHistory.push('/welcome')
   } catch(err) {
     console.log('horrible error man, sorry')
   }
