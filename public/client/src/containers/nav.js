@@ -57,7 +57,6 @@ export default class Navigation extends Component{
 }
 
 function mapStateToProps(state) {
-  // console.log(state);
   return {
 
   }

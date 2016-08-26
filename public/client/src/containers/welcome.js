@@ -67,11 +67,10 @@ class Welcome extends Component {
   }
 
   hover(marker) {
-    let { dispatch } = this.props;
     let experiences = this.state.experiences;
 
     let newArray = experiences.map((exp) => {
-      if(exp._id === marker._id) {
+      if(exp.uid === marker.uid) {
         console.log('found it');
         let newObj = {};
         Object.assign(newObj, exp)
@@ -81,20 +80,19 @@ class Welcome extends Component {
         return exp;
       }
     });
-
-    dispatch({
-      type: 'HOVER',
-      payload: newArray
+    this.setState({
+      experiences: newArray
     });
   }
 
 
   showDetail(marker) {
+    console.log('da marker: ', marker)
     return(
       <InfoWindow
         onCloseclick={this.handleMarkerClose.bind(null, marker)}>
         <div className="hoverExp">
-          <h5 onClick={() => browserHistory.push("/experiences/" + marker._id)}>{marker.title}</h5>
+          <h5 onClick={() => browserHistory.push("/experiences/" + marker.uid)}>{marker.title}</h5>
           <p>{marker.description}</p>
           <div className="imgRow">
             {marker.images.map((img)=>{
@@ -107,10 +105,11 @@ class Welcome extends Component {
   }
 
   handleMarkerClose(marker) {
-    let { dispatch, experiences } = this.props;
+    let experiences = this.state.experiences;
+
     let newArray = experiences.map((exp) => {
-      if(exp._id === marker._id) {
-        newObj = {};
+      if(exp.uid === marker.uid) {
+        let newObj = {};
         Object.assign(newObj, exp)
         newObj.showInfo = false;
         return newObj;
@@ -119,9 +118,8 @@ class Welcome extends Component {
       }
     });
 
-    dispatch({
-      type: 'HOVER_CLOSE',
-      payload: newArray
+    this.setState({
+      experiences: newArray
     });
   }
 
@@ -166,7 +164,7 @@ class Welcome extends Component {
 
     if(this.state.experiences && this.state.experiences.length > 0) {
       exp = this.state.experiences.map((exp) => {
-        return <div key={exp._id}><Link to={"/experiences/" + exp._id }>{exp.title}</Link></div>
+        return <div key={exp.uid}><Link to={"/experiences/" + exp.uid }>{exp.title}</Link></div>
       })
     } else {
       exp = <div>Loading experiences...</div>

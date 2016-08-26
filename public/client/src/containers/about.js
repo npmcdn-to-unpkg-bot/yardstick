@@ -58,23 +58,25 @@ class About extends Component{
       email: form.signIn.email.value,
       password: form.signIn.password.value
     }
-    Meteor.loginWithPassword(user.email, user.password, function(err) {
-      if(err) {
-        alert(err)
-      } else {
-        dispatch({
-          type: 'SET_USER',
-          user: Meteor.user()
-        });
-        browserHistory.push('/welcome')
-      }
-    })
+    base.auth().signInWithEmailAndPassword(user.email, user.password).catch(function(error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      // ...
+      console.log('err? ', errorMessage)
+      alert(errorMessage);
+    });
+    browserHistory.push('/welcome');
+
   }
 
   signUp(e) {
     e.preventDefault();
-    let { dispatch, form } = this.props;
 
+    let { dispatch, form } = this.props;
+          let email = form.signUp.email.value;
+          let password = form.signUp.password.value;
+    //
     var geocoder = new google.maps.Geocoder();
     geocoder.geocode({ 'address': form.signUp.address.value}, function(res, status) {
       if(status == 'OK') {
@@ -89,23 +91,14 @@ class About extends Component{
             longitude: res[0].geometry.viewport.b.b,
           }
         }
-
-        Accounts.createUser(user, function(err, res) {
-          if(err) {
-            console.log('error', err)
-            alert('Error Signing Up')
-          } else {
-            dispatch({
-              type: 'SET_USER',
-              user: Meteor.user()
-            });
-            Meteor.call('sendVerificationLink');
-            browserHistory.push('/welcome')
-          }
-        })
+        dispatch({
+          type: 'SIGN_UP',
+          payload: user
+        });
       }
-    })
+    });
   }
+
 
   render() {
       return (

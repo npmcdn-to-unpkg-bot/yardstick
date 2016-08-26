@@ -28,7 +28,6 @@ class CreateExp extends Component {
       });
     },
     function(error){
-      //  console.log(JSON.stringify(error)); - print errors to console
       alert('Error uploading images.')
     }
 
@@ -66,21 +65,17 @@ class CreateExp extends Component {
 
   blockDates(e) {
     let { dispatch } = this.props;
-    console.log(e._d);
     let array = this.props.dates.unavailableDates.slice();
     array.push(e._d)
     dispatch(ExperienceActions.blockDates(array));
   }
 
   render() {
-
-      return(
-        <div>
+    return(
+      <div>
         <CreateForm createExp={this.createExp} blockDates={this.blockDates} uploadImages={this.uploadImages}/>
-
-        </div>
-      )
-
+      </div>
+    )
   }
 }
 

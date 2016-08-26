@@ -29,7 +29,6 @@ class Profile extends Component {
   }
 
   viewConversation(msg) {
-    console.log('wat message dude: ', msg)
     let { dispatch } = this.props;
     dispatch({
       type: 'VIEW_CONVERSATION',
