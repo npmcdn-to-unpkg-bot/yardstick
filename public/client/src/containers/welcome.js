@@ -9,6 +9,7 @@ import ChangeModal from '../components/welcome/changeModal';
 
 class Welcome extends Component {
   constructor(props) {
+
     super(props);
     this.hover = this.hover.bind(this);
     this.showDetail = this.showDetail.bind(this);
@@ -24,12 +25,12 @@ class Welcome extends Component {
       changeModal: false
     });
 
-    Meteor.call('getExpByLocation', function (err, res) {
-      dispatch({
-        type: 'GET_EXPERIENCES_SUCCESS',
-        experiences: res
-      });
-    });
+    // Meteor.call('getExpByLocation', function (err, res) {
+    //   dispatch({
+    //     type: 'GET_EXPERIENCES_SUCCESS',
+    //     experiences: res
+    //   });
+    // });
     if ("geolocation" in navigator) {
       /* geolocation is available */
       navigator.geolocation.getCurrentPosition(function(position) {
@@ -43,13 +44,13 @@ class Welcome extends Component {
       });
     } else {
       console.log('location thing not working')
-      dispatch({
-        type: 'SET_LOCATION',
-        payload: {
-          latitude: Meteor.user().profile.latitude,
-          longitude: Meteor.user().profile.longitude
-        }
-      });
+      // dispatch({
+      //   type: 'SET_LOCATION',
+      //   payload: {
+      //     latitude: Meteor.user().profile.latitude,
+      //     longitude: Meteor.user().profile.longitude
+      //   }
+      // });
     }
   }
 
@@ -155,7 +156,6 @@ class Welcome extends Component {
       exp = <div>Loading experiences...</div>
     }
 
-    if(Meteor.user()){
       return(
         <div>
         <ChangeModal
@@ -202,11 +202,9 @@ class Welcome extends Component {
         {exp}
         </div>
       )
-    } else {
-      return <div>Loading...</div>
     }
   }
-}
+
 
 function mapStateToProps(state) {
   console.log('state: ', state)

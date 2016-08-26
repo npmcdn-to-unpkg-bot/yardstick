@@ -5,7 +5,7 @@ import { Route, IndexRoute } from 'react-router';
 import { Provider } from 'react-redux';
 import createSagaMiddleware from 'redux-saga';
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
-// import { authenticate } from './auth';
+import { authenticate } from './auth';
 import reducer from './reducers/reducer';
 import rootSaga from './sagas/index';
 import Main from './containers/main';
@@ -32,8 +32,8 @@ ReactDOM.render(
   <Provider store={store}>
     <Router
     history={browserHistory}
-    // onLoad={authenticate(store)}
-    // onUpdate={authenticate(store)}
+    onLoad={authenticate(store)}
+    onUpdate={authenticate(store)}
     >
     <Route path="/" component={Home}/>
     <Route path="/verify-email/:token" component={verifyEmail} />

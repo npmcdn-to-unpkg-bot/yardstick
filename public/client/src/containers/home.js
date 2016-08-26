@@ -4,7 +4,19 @@ import SignIn from '../components/auth/signIn';
 import SignUp from '../components/auth/signUp';
 import { Link, browserHistory } from 'react-router';
 import superagent from 'superagent';
+import 'react-google-maps';
+
 require('../stylesheets/main.scss');
+var Rebase = require('re-base');
+
+var config = {
+  apiKey: "AIzaSyAthBCq_uopCnlQn27DbBmQrHQVEJVfKRo",
+  authDomain: "outdoors-1380.firebaseapp.com",
+  databaseURL: "https://outdoors-1380.firebaseio.com",
+  storageBucket: "outdoors-1380.appspot.com",
+};
+
+var base = Rebase.createClass(config);
 class Home extends Component{
   constructor(props) {
     super(props);
@@ -22,9 +34,6 @@ class Home extends Component{
       logInBtn: true,
       signUpBtn: true
     });
-    superagent
-    .get('http://localhost:3333/users')
-    .end((err, res) => console.log(res))
   }
 
   dismiss() {
@@ -62,37 +71,44 @@ class Home extends Component{
       email: form.signIn.email.value,
       password: form.signIn.password.value
     }
+    base.auth().signInWithEmailAndPassword(user.email, user.password).catch(function(error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      // ...
+      console.log('err? ', errorMessage)
+    });
+    browserHistory.push('/welcome');
 
   }
 
   signUp(e) {
     e.preventDefault();
-    superagent
-      .get('http://localhost:3333/signUp')
-      .end((err, res) => console.log(res))
-    // e.preventDefault();
-    // let { dispatch, form } = this.props;
+
+    let { dispatch, form } = this.props;
+          let email = form.signUp.email.value;
+          let password = form.signUp.password.value;
     //
-    // var geocoder = new google.maps.Geocoder();
-    // geocoder.geocode({ 'address': form.signUp.address.value}, function(res, status) {
-    //   if(status == 'OK') {
-    //     let user = {
-    //       email: form.signUp.email.value,
-    //       password: form.signUp.password.value,
-    //       profile: {
-    //         firstName: form.signUp.firstName.value,
-    //         lastName: form.signUp.lastName.value,
-    //         address: form.signUp.address.value,
-    //         latitude: res[0].geometry.viewport.f.b,
-    //         longitude: res[0].geometry.viewport.b.b,
-    //       }
-    //     }
-    //     dispatch({
-    //       type: 'SIGN_UP',
-    //       payload: user
-    //     });
-    //   }
-    // });
+    var geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ 'address': form.signUp.address.value}, function(res, status) {
+      if(status == 'OK') {
+        let user = {
+          email: form.signUp.email.value,
+          password: form.signUp.password.value,
+          profile: {
+            firstName: form.signUp.firstName.value,
+            lastName: form.signUp.lastName.value,
+            address: form.signUp.address.value,
+            latitude: res[0].geometry.viewport.f.b,
+            longitude: res[0].geometry.viewport.b.b,
+          }
+        }
+        dispatch({
+          type: 'SIGN_UP',
+          payload: user
+        });
+      }
+    });
   }
 
   render() {
