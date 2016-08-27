@@ -27,6 +27,7 @@ class Home extends Component{
     this.toggleSignUp = this.toggleSignUp.bind(this);
     this.dismiss = this.dismiss.bind(this);
   }
+  
   componentWillMount() {
     this.setState({
       signIn: false,

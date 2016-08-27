@@ -66,12 +66,22 @@ class Welcome extends Component {
     });
   }
 
+  componentWillUnmount() {
+    let newArray = this.state.experiences.map((exp) => {
+      exp.showInfo = false;
+    })
+    // this.setState({
+    //   experiences: newArray
+    // });
+  }
+
   hover(marker) {
+    console.log('the marker we hover on: ', marker)
     let experiences = this.state.experiences;
 
     let newArray = experiences.map((exp) => {
-      if(exp.uid === marker.uid) {
-        console.log('found it');
+      if(exp.key === marker.key) {
+        // console.log('found it');
         let newObj = {};
         Object.assign(newObj, exp)
         newObj.showInfo = true;
@@ -87,12 +97,12 @@ class Welcome extends Component {
 
 
   showDetail(marker) {
-    console.log('da marker: ', marker)
+    // console.log('da marker: ', marker)
     return(
       <InfoWindow
         onCloseclick={this.handleMarkerClose.bind(null, marker)}>
         <div className="hoverExp">
-          <h5 onClick={() => browserHistory.push("/experiences/" + marker.uid)}>{marker.title}</h5>
+          <h5 onClick={() => browserHistory.push("/experiences/" + marker.key + '/' + marker.user)}>{marker.title}</h5>
           <p>{marker.description}</p>
           <div className="imgRow">
             {marker.images.map((img)=>{
@@ -108,7 +118,7 @@ class Welcome extends Component {
     let experiences = this.state.experiences;
 
     let newArray = experiences.map((exp) => {
-      if(exp.uid === marker.uid) {
+      if(exp.key === marker.key) {
         let newObj = {};
         Object.assign(newObj, exp)
         newObj.showInfo = false;
@@ -164,7 +174,7 @@ class Welcome extends Component {
 
     if(this.state.experiences && this.state.experiences.length > 0) {
       exp = this.state.experiences.map((exp) => {
-        return <div key={exp.uid}><Link to={"/experiences/" + exp.uid }>{exp.title}</Link></div>
+        return <div key={exp.key}><Link to={"/experiences/" + exp.key }>{exp.title}</Link></div>
       })
     } else {
       exp = <div>Loading experiences...</div>

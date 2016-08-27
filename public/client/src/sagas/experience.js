@@ -90,30 +90,31 @@ function* getExp(action) {
 
 function* getSingleExp(action) {
 
-  let expObj = {}
+  // let expObj = {}
   try{
-    const exp = yield Experiences.find({ _id: action.payload._id }).fetch();
+    // const exp = yield Experiences.find({ _id: action.payload._id }).fetch();
+    //
+    // const user = yield Meteor.users.find({ _id: exp[0].user }).fetch();
 
-    const user = yield Meteor.users.find({ _id: exp[0].user }).fetch();
-
-    Object.assign(expObj, exp[0]);
-    expObj.user = user[0];
-    yield put({
-      type: 'GET_SINGLE_EXPERIENCE_SUCCESS',
-      experience: expObj
-    })
+    // Object.assign(expObj, exp[0]);
+    // expObj.user = user[0];
+    // yield put({
+    //   type: 'GET_SINGLE_EXPERIENCE_SUCCESS',
+    //   experience: expObj
+    // })
   } catch(err) {
     console.log('fatal error duuuuude')
   }
 }
 
 function* createExp(action) {
-  console.log('exp: ', action);
+  console.log('creating action...', action)
   try {
-    yield firebase.database().ref('experiences').push(action.payload);
+    const exp = yield base.database().ref('experiences').push().set(action.payload);
+    // yield console.log('created? ', exp.key())
     yield browserHistory.push('/welcome')
   } catch(err) {
-    console.log('horrible error man, sorry')
+    console.log('horrible error man, sorry', err)
   }
 }
 

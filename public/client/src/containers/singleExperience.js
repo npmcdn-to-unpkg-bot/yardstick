@@ -5,28 +5,41 @@ import Datetime from 'react-datetime';
 import moment from 'moment';
 import { GoogleMapLoader, GoogleMap, Marker } from "react-google-maps";
 import ExperienceActions from '../actions/experiences';
+var Rebase = require('re-base');
 
+var config = {
+  apiKey: "AIzaSyAthBCq_uopCnlQn27DbBmQrHQVEJVfKRo",
+  authDomain: "outdoors-1380.firebaseapp.com",
+  databaseURL: "https://outdoors-1380.firebaseio.com",
+  storageBucket: "outdoors-1380.appspot.com",
+};
+
+var base = Rebase.createClass(config);
 
 class SingleExperience extends Component {
   constructor(props) {
     super(props)
 
+    this.state = { experience: null, host: null }
     this.selectDate = this.selectDate.bind(this);
     this.validDate = this.validDate.bind(this);
     this.reserve = this.reserve.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     let { dispatch, params } = this.props;
-
-    dispatch({
-      type: 'GET_SINGLE_EXPERIENCE',
-      payload: {
-        _id: params.experienceId
-      }
-    })
+    console.log('da params: ', params)
+    base.syncState(`experiences/` + params.experienceId, {
+      context: this,
+      state: 'experience',
+      asArray: false
+    });
+    base.syncState(`users/` + params.userId, {
+      context: this,
+      state: 'host',
+      asArray: false
+    });
   }
-
 
   componentWillUnmount() {
     let { dispatch, params } = this.props;
@@ -45,21 +58,21 @@ class SingleExperience extends Component {
 
 
   validDate(current) {
-    let newA = this.props.dates.unavailableDates.find((date) => {
-      return Datetime.moment(current._d).isSame(date, 'day')
-    });
-
-    if(newA) {
-      return false;
-    } else {
-      return true;
-    }
+    // let newA = this.state.experience.unavailableDates.find((date) => {
+    //   return Datetime.moment(current._d).isSame(date, 'day')
+    // });
+    //
+    // if(newA) {
+    //   return false;
+    // } else {
+    //   return true;
+    // }
   }
 
   reserve() {
     let { dispatch, experiences, reservation } = this.props;
     let data = {
-      user: Meteor.user(),
+      // user: Meteor.user(),
       experience: experiences.singleExperience,
       date: reservation.selectedDate
     }
@@ -69,27 +82,28 @@ class SingleExperience extends Component {
   }
 
   render(){
+    console.log('the state: ', this.state)
     let exp;
     let images;
-    if(this.props.experiences.singleExperience.images) {
-      images = this.props.experiences.singleExperience.images.map((img) => {
+    if(this.state.experience && this.state.experience.images) {
+      images = this.state.experience.images.map((img) => {
         return <img src={img.url} />
       })
     } else { images = <div></div>}
 
-    if(this.props.experiences.singleExperience._id.length > 0) {
+    if(this.state.experience && this.state.host) {
 
       exp = (
         <div>
           <div className="singleExp">
-            <h4>{this.props.experiences.singleExperience.title}- {this.props.experiences.singleExperience.city}, {this.props.experiences.singleExperience.state}</h4>
-            <div className="imageGallery">
-              {images}
-            </div>
-            <p>{this.props.experiences.singleExperience.description}</p>
-            <div className="userDetails">
-              <h5>{this.props.experiences.singleExperience.user.profile.firstName} {this.props.experiences.singleExperience.user.profile.lastName}</h5>
-            </div>
+          <h4>{this.state.experience.title}- {this.state.experience.city}, {this.state.experience.state}</h4>
+          <div className="imageGallery">
+            {images}
+          </div>
+          <p>{this.state.experience.description}</p>
+          <div className="userDetails">
+            <h5>{this.state.host.firstName} {this.state.host.lastName}</h5>
+          </div>
           </div>
 
             <div style={{ height: 300 }} className="singleMap">
@@ -101,7 +115,7 @@ class SingleExperience extends Component {
                   <GoogleMap
                     ref={(map) => console.log(map)}
                     defaultZoom={12}
-                    defaultCenter={{ lat: this.props.experiences.singleExperience.latitude, lng: this.props.experiences.singleExperience.longitude }}
+                    defaultCenter={{ lat: this.state.experience.latitude, lng: this.state.experience.longitude }}
                   >
                   </GoogleMap>
                 }

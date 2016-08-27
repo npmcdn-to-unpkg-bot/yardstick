@@ -8,7 +8,7 @@ import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import { authenticate } from './auth';
 import reducer from './reducers/reducer';
 import rootSaga from './sagas/index';
-import Main from './containers/main';
+// import Main from './containers/main';
 import Home from './containers/home';
 import Welcome from './containers/welcome';
 import SingleExperience from './containers/singleExperience';
@@ -40,7 +40,7 @@ ReactDOM.render(
     <Route path="/about" component={about} />
       <Route component={Nav}>
         <Route path="/welcome" component={Welcome} />
-        <Route path="/experiences/:experienceId" component={SingleExperience} />
+        <Route path="/experiences/:experienceId/:userId" component={SingleExperience} />
         <Route path="/createExperience" component={CreateExp} />
         <Route path="/reservation" component={Reservation} />
         <Route path="/profile" component={Profile} />

@@ -66,6 +66,7 @@ class CreateExp extends Component {
   blockDates(e) {
     let { dispatch } = this.props;
     let array = this.props.dates.unavailableDates.slice();
+    console.log('blocking dates? ', array)
     array.push(e._d)
     dispatch(ExperienceActions.blockDates(array));
   }
@@ -80,6 +81,7 @@ class CreateExp extends Component {
 }
 
 function mapStateToProps(state) {
+  console.log(state)
   return {
     user: state.auth.user,
     form: state.form.createForm,
