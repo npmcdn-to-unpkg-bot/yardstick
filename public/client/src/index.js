@@ -19,6 +19,20 @@ import about from './containers/about';
 import Profile from './containers/profile';
 import Nav from './containers/nav';
 
+if ('serviceWorker' in navigator) {
+    console.log('Service Worker is supported');
+    navigator.serviceWorker.register('sw.js').then(function(reg) {
+        console.log(':^)', reg);
+        reg.pushManager.subscribe({
+            userVisibleOnly: true
+        }).then(function(sub) {
+            console.log('endpoint:', sub.endpoint);
+        });
+    }).catch(function(error) {
+        console.log(':^(', error);
+    });
+}
+
 const sagaMiddleware = createSagaMiddleware();
 const store = compose(
    applyMiddleware(sagaMiddleware),
@@ -42,7 +56,7 @@ ReactDOM.render(
         <Route path="/welcome" component={Welcome} />
         <Route path="/experiences/:experienceId/:userId" component={SingleExperience} />
         <Route path="/createExperience" component={CreateExp} />
-        <Route path="/reservation" component={Reservation} />
+        <Route path="/reservation/:experienceId" component={Reservation} />
         <Route path="/profile" component={Profile} />
       </Route>
     </Router>

@@ -53,9 +53,7 @@ class CreateExp extends Component {
             longitude: res[0].geometry.viewport.b.b,
             latitude: res[0].geometry.viewport.f.b,
             user: user.uid,
-            dates: {
-              unavailableDates: dates.unavailableDates
-            }
+            unavailableDates: dates.unavailableDates
           }
         })
 

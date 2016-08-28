@@ -59,7 +59,7 @@ class Welcome extends Component {
   }
 
   componentDidMount() {
-    base.syncState(`experiences`, {
+    this.ref = base.bindToState(`experiences`, {
       context: this,
       state: 'experiences',
       asArray: true
@@ -69,10 +69,9 @@ class Welcome extends Component {
   componentWillUnmount() {
     let newArray = this.state.experiences.map((exp) => {
       exp.showInfo = false;
-    })
-    // this.setState({
-    //   experiences: newArray
-    // });
+    });
+
+    base.removeBinding(this.ref);
   }
 
   hover(marker) {
@@ -102,7 +101,16 @@ class Welcome extends Component {
       <InfoWindow
         onCloseclick={this.handleMarkerClose.bind(null, marker)}>
         <div className="hoverExp">
-          <h5 onClick={() => browserHistory.push("/experiences/" + marker.key + '/' + marker.user)}>{marker.title}</h5>
+          <h5 onClick={() => {
+            // let newArray = this.state.experiences.map((exp) => {
+            //   exp.showInfo = false;
+            // });
+            this.setState({
+              experiences: null
+            });
+            browserHistory.push("/experiences/" + marker.key + '/' + marker.user)
+          }
+          }>{marker.title}</h5>
           <p>{marker.description}</p>
           <div className="imgRow">
             {marker.images.map((img)=>{
@@ -220,7 +228,7 @@ class Welcome extends Component {
         googleMapElement={
           <GoogleMap
           ref={(map) => console.log(map)}
-          defaultZoom={10}
+          defaultZoom={7}
           center={{ lat: this.props.location.latitude, lng: this.props.location.longitude }}
           >
             {markerSection}

@@ -52,6 +52,7 @@ class SingleExperience extends Component {
   selectDate(e) {
     let { dispatch } = this.props;
     let date = e._d.toString();
+    console.log(date)
 
     dispatch(ExperienceActions.selectDate(date));
   }
@@ -67,22 +68,22 @@ class SingleExperience extends Component {
     // } else {
     //   return true;
     // }
+    return true;
   }
 
   reserve() {
-    let { dispatch, experiences, reservation } = this.props;
+    let { dispatch, reservation, user, params } = this.props;
+    let experience = this.state.experience;
+    experience.key = params.experienceId;
     let data = {
-      // user: Meteor.user(),
-      experience: experiences.singleExperience,
+      user: user.uid,
+      experience: experience,
       date: reservation.selectedDate
     }
-
-    dispatch(ExperienceActions.reserve(data))
-
+    dispatch(ExperienceActions.reserve(data));
   }
 
   render(){
-    console.log('the state: ', this.state)
     let exp;
     let images;
     if(this.state.experience && this.state.experience.images) {

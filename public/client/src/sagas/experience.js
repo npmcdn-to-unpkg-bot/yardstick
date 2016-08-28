@@ -16,48 +16,7 @@ var base = Rebase.createClass(config);
 function* confirmRes(action) {
   console.log('action: ', action)
   try {
-    let reservation = {
-      experience: action.payload.reservation.experience._id,
-      host: action.payload.reservation.host._id,
-      reservedBy: action.payload.reservation.reservedBy._id,
-      date: action.payload.selectedDate,
-      confirmed: false,
-      isCompleted: false
-    }
-    const res = yield Reservations.insert(reservation);
-    yield Meteor.call('newRes', reservation);
-    // yield Meteor.call('sendEmail', {
-    //   to: action.payload.reservation.host.emails[0].address,
-    //   from: 'Webmaster at GoFishCampHike',
-    //   subject: 'Your experience was reserved!',
-    //   text: action.payload.reservation.reservedBy.profile.firstName + action.payload.reservation.reservedBy.profile.lastName + ' has reserved your experience: ' + action.payload.reservation.experience.title + ' at : ' +
-    //   action.payload.selectedDate + '. Please check your dashboard for more details.'
-    // });
-    //
-    // yield Meteor.call('sendEmail', {
-    //   to: action.payload.reservation.reservedBy.emails[0].address,
-    //   from: 'Webmaster at GoFishCampHike',
-    //   subject: 'Your pending reservation at GoFishCampHike',
-    //   text: "Congratulations! You just reserved an awesome outdoor experience. You will be notified as soon as the host has confirmed your reservation."
-    // });
-
-    yield Meteor.call('sendMessage', {
-      to: action.payload.reservation.reservedBy._id,
-      owner: {
-        _id: action.payload.reservation.host._id,
-        name: action.payload.reservation.host.profile.firstName
-      },
-      message: 'Congratulations! You made a reservation.'
-    });
-
-    yield Meteor.call('sendMessage', {
-      to: action.payload.reservation.host._id,
-      owner: {
-        _id: action.payload.reservation.reservedBy._id,
-        name: action.payload.reservation.reservedBy.profile.firstName
-      },
-      message: 'Your experience has been reserved!'
-    });
+    const res = yield base.push('reservations', { data: action.payload });
 
     yield browserHistory.push('/welcome');
   } catch(err) {
@@ -69,46 +28,20 @@ function* reserve(action) {
   try {
     yield put({ type: 'RESERVE_EXP', payload: {
       experience: action.payload.experience,
-      host: action.payload.experience.user,
-      reservedBy: Meteor.user()
+      reservedBy: action.payload.user,
+      date: action.payload.date
     }});
-    yield browserHistory.push('/reservation');
+    yield browserHistory.push('/reservation/' + action.payload.experience.key);
   } catch(err) {
     alert('man sorry bout that, it didnt work')
     console.log('man thats the worst error')
   }
 }
 
-function* getExp(action) {
-  try {
-
-  } catch(err) {
-    //do something
-    console.log('fatal error dude')
-  }
-}
-
-function* getSingleExp(action) {
-
-  // let expObj = {}
-  try{
-    // const exp = yield Experiences.find({ _id: action.payload._id }).fetch();
-    //
-    // const user = yield Meteor.users.find({ _id: exp[0].user }).fetch();
-
-    // Object.assign(expObj, exp[0]);
-    // expObj.user = user[0];
-    // yield put({
-    //   type: 'GET_SINGLE_EXPERIENCE_SUCCESS',
-    //   experience: expObj
-    // })
-  } catch(err) {
-    console.log('fatal error duuuuude')
-  }
-}
 
 function* createExp(action) {
   console.log('creating action...', action)
+
   try {
     const exp = yield base.database().ref('experiences').push().set(action.payload);
     // yield console.log('created? ', exp.key())
@@ -156,10 +89,6 @@ export function* getExperiences() {
   yield* takeEvery('GET_EXPERIENCES', getExp)
 }
 
-export function* watchGetSingleExp() {
-  yield* takeEvery('GET_SINGLE_EXPERIENCE', getSingleExp)
-}
-
 export function* watchCreate() {
   yield* takeEvery('CREATE_EXP', createExp)
 }
@@ -183,7 +112,7 @@ export function* watchUserList() {
 export default function* homeSaga() {
   yield [
     getExperiences(),
-    watchGetSingleExp(),
+    // watchGetSingleExp(),
     watchCreate(),
     watchReserve(),
     watchConfirm(),

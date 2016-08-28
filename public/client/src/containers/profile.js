@@ -13,19 +13,28 @@ class Profile extends Component {
     this.dismiss = this.dismiss.bind(this);
   }
   componentWillMount() {
-    let { dispatch, user } = this.props;
-    dispatch({
-      type: 'GET_USER_EXP',
-      user: user._id
-    });
-    dispatch({
-      type: 'GET_USER_LISTINGS',
-      user: user._id
-    })
-    dispatch({
-      type: 'GET_USER_MESSAGES',
-      user: user._id
-    })
+    if ('serviceWorker' in navigator) {
+     console.log('Service Worker is supported');
+     navigator.serviceWorker.register('sw.js').then(function(reg) {
+       console.log(':^)', reg);
+       // TODO
+     }).catch(function(err) {
+       console.log(':^(', err);
+     });
+    }
+    // let { dispatch, user } = this.props;
+    // dispatch({
+    //   type: 'GET_USER_EXP',
+    //   user: user._id
+    // });
+    // dispatch({
+    //   type: 'GET_USER_LISTINGS',
+    //   user: user._id
+    // })
+    // dispatch({
+    //   type: 'GET_USER_MESSAGES',
+    //   user: user._id
+    // })
   }
 
   viewConversation(msg) {
@@ -66,82 +75,11 @@ class Profile extends Component {
 
   render() {
 
-    let expSection;
-    if(this.props.experiences && this.props.experiences.length > 0) {
-      expSection = this.props.experiences.map((exp) => {
-        return (
-          <div className="exp-profile" key={exp.reservationId}>
-            <h5><Link to={"/experiences/" + exp._id}>{exp.title}</Link></h5>
-            <span>{exp.date}</span>
-            <div className="profile-exp-img">
-              {exp.images.map((img) => {
-                return <img src={img.url} style={{ width: 100 }}/>
-              })}
-            </div>
-            <span>Rate!</span>
-          </div>
-        )
-      })
-    } else {
-      expSection = <p>You havent booked any experiences yet!</p>
-    }
-
-    let listings;
-    if(this.props.listings && this.props.listings.length > 0) {
-      listings = this.props.listings.map((listing) => {
-        return (
-          <div>
-            <h4>{listing.title}</h4>
-          </div>
-        )
-      })
-    } else {
-      listings = <div>You dont have any listings yet!</div>
-    }
-
-    let messages;
-    if(this.props.conversation.conversation) {
-      messages = this.props.conversation.conversation.map((msg) => {
-        return (
-          <div onClick={this.viewConversation.bind(null, msg)}>
-            <span>From: {msg.owner.name}</span>
-
-          </div>
-        )
-      })
-    } else {
-      messages = <div>No Messages</div>
-    }
 
     return(
       <div>
-        <div>
-          <h4>Profile Info</h4>
-          <span>{Meteor.user() ? Meteor.user().profile.firstName : 'Loading...'}</span>
-        </div>
-        <div>
-          <h4>My Experiences</h4>
-          <span>These are the experiences that you have participated in. Book them again, or leave a rating!</span>
-            {expSection}
-        </div>
-
-        <div>
-          <h4>My Listings</h4>
-          {listings}
-        </div>
-
-        <div className="messages">
-          <h4>Messages</h4>
-          {messages}
-        </div>
-        <Conversation
-          owner={this.props.user._id}
-          visible={this.props.conversation.visible}
-          dismiss={this.dismiss}
-          conversation={this.props.conversation.view}
-          typeMessage={this.typeMessage}
-          sendMessage={this.sendMessage}
-        />
+      profile
+        
       </div>
     )
   }
