@@ -38,7 +38,7 @@ class Reservation extends Component {
     }
 
     console.log('deets: ', reservation);
-    dispatch(ExperienceActions.confirmRes(reservation))
+    dispatch(ExperienceActions.confirmRes(reservation));
   }
 
   cancel() {

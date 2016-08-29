@@ -17,8 +17,25 @@ function* confirmRes(action) {
   console.log('action: ', action)
   try {
     const res = yield base.push('reservations', { data: action.payload });
+    var getExp = yield firebase.database().ref('experiences/' + action.payload.experience);
+    getExp.once('value', function(val) {
+      let whakamole = val.val()
+      console.log('mewosdfa? ', whakamole)
+      let data = {
+        : action.payload.user,
 
-    yield browserHistory.push('/welcome');
+      }
+      base.push('conversations', { data: })
+    });
+    // console.log('dirt: ', result)
+    // console.log('meow???', getExp)
+    // action.payload.experience
+    // action.payload.reservedBy
+    // action.payload.selectedDate
+    // yield base.push('conversations', { data:
+    //     //something here
+    // })
+    // yield browserHistory.push('/welcome');
   } catch(err) {
     console.log('didnt work dude')
   }
