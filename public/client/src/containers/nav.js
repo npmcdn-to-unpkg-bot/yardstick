@@ -44,7 +44,7 @@ export default class Navigation extends Component{
             <Nav>
               <Link to="/welcome">Home</Link>
               <Link to="/createExperience">Create Experience</Link>
-              <Link to={"/profile"}>Profile</Link>
+              <Link to={"/profile/" + this.props.user.uid}>Profile</Link>
             </Nav>
           </Navbar>
             <div className="content-main">
@@ -57,8 +57,9 @@ export default class Navigation extends Component{
 }
 
 function mapStateToProps(state) {
+  console.log(state);
   return {
-
+    user: state.auth.user
   }
 }
 

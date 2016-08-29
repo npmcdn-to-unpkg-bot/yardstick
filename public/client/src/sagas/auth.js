@@ -13,10 +13,8 @@ var config = {
 var base = Rebase.createClass(config);
 
 function* signUp(action) {
-  console.log(action)
   try {
     const user = yield base.auth().createUserWithEmailAndPassword(action.payload.email, action.payload.password)
-    console.log('the user? ', user);
     yield firebase.database().ref('users/' + user.uid).set({
       firstName: action.payload.profile.firstName,
       lastName: action.payload.profile.lastName,

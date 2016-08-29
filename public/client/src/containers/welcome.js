@@ -158,7 +158,6 @@ class Welcome extends Component {
     let { dispatch, form } = this.props;
     var geocoder = new google.maps.Geocoder();
       geocoder.geocode({ 'address': form.changeLocation.address.value}, function(res, status) {
-        console.log('status: ', status);
         if(status === 'OK') {
           let data = {
             latitude: res[0].geometry.viewport.f.b,
@@ -189,7 +188,6 @@ class Welcome extends Component {
     }
 
     if(this.state.experiences && this.state.experiences.length > 0) {
-      console.log('experiences yayyy: ', this.state.experiences)
       markerSection = (
         this.state.experiences.map((marker, index) => {
 
@@ -244,7 +242,6 @@ class Welcome extends Component {
 
 
 function mapStateToProps(state) {
-  console.log('state: ', state)
   return {
     user: state.auth.user,
     location: state.auth.location,

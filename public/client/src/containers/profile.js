@@ -2,84 +2,62 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import Conversation from '../components/messages/conversation';
+var Rebase = require('re-base');
+
+var config = {
+  apiKey: "AIzaSyAthBCq_uopCnlQn27DbBmQrHQVEJVfKRo",
+  authDomain: "outdoors-1380.firebaseapp.com",
+  databaseURL: "https://outdoors-1380.firebaseio.com",
+  storageBucket: "outdoors-1380.appspot.com",
+};
+
+var base = Rebase.createClass(config);
 
 class Profile extends Component {
   constructor(props){
     super(props);
 
-    this.viewConversation = this.viewConversation.bind(this);
-    this.typeMessage = this.typeMessage.bind(this);
-    this.sendMessage = this.sendMessage.bind(this);
-    this.dismiss = this.dismiss.bind(this);
+
   }
-  componentWillMount() {
-    if ('serviceWorker' in navigator) {
-     console.log('Service Worker is supported');
-     navigator.serviceWorker.register('sw.js').then(function(reg) {
-       console.log(':^)', reg);
-       // TODO
-     }).catch(function(err) {
-       console.log(':^(', err);
-     });
-    }
-    // let { dispatch, user } = this.props;
-    // dispatch({
-    //   type: 'GET_USER_EXP',
-    //   user: user._id
+  componentDidMount() {
+    let { params } = this.props;
+    base.syncState(`experiences`, {
+      context: this,
+      state: 'myExperiences',
+      asArray: true,
+      queries: {
+        orderByChild: 'user',
+        equalTo: params.userId
+      }
+    });
+    base.syncState(`reservations`, {
+      context: this,
+      state: 'reservations',
+      asArray: true,
+      queries: {
+        orderByChild: 'reservedBy',
+        equalTo: params.userId
+      }
+    });
+    // base.syncState(`experiences`, {
+    //   context: this,
+    //   state: 'hosting',
+    //   asArray: true,
+    //   queries: {
+    //
+    //   }
     // });
-    // dispatch({
-    //   type: 'GET_USER_LISTINGS',
-    //   user: user._id
-    // })
-    // dispatch({
-    //   type: 'GET_USER_MESSAGES',
-    //   user: user._id
-    // })
   }
 
-  viewConversation(msg) {
-    let { dispatch } = this.props;
-    dispatch({
-      type: 'VIEW_CONVERSATION',
-      payload: msg
-    });
-  }
-
-  dismiss() {
-    let { dispatch } = this.props;
-    dispatch({
-      type: 'VIEW_CONVERSATION',
-      payload: {}
-    })
-  }
-
-  typeMessage(e) {
-    let { dispatch } = this.props;
-    let msg = e.target.value;
-    dispatch({
-      type: 'TYPE_MESSAGE',
-      payload: msg
-    });
-  }
-
-  sendMessage(e) {
-    e.preventDefault();
-    let { dispatch, conversation, user } = this.props;
-    dispatch({
-      type: 'SEND_MESSAGE',
-      payload: conversation
-    })
-    document.getElementById('msgInput').value = '';
-  }
 
 
   render() {
-
+    console.log('cracker jacks: ', this.state)
 
     return(
       <div>
       profile
-        
+
       </div>
     )
   }

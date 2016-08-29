@@ -57,7 +57,7 @@ ReactDOM.render(
         <Route path="/experiences/:experienceId/:userId" component={SingleExperience} />
         <Route path="/createExperience" component={CreateExp} />
         <Route path="/reservation/:experienceId" component={Reservation} />
-        <Route path="/profile" component={Profile} />
+        <Route path="/profile/:userId" component={Profile} />
       </Route>
     </Router>
   </Provider>

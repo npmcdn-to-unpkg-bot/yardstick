@@ -28,7 +28,6 @@ class SingleExperience extends Component {
 
   componentDidMount() {
     let { dispatch, params } = this.props;
-    console.log('da params: ', params)
     base.syncState(`experiences/` + params.experienceId, {
       context: this,
       state: 'experience',
@@ -52,8 +51,6 @@ class SingleExperience extends Component {
   selectDate(e) {
     let { dispatch } = this.props;
     let date = e._d.toString();
-    console.log(date)
-
     dispatch(ExperienceActions.selectDate(date));
   }
 
@@ -78,6 +75,7 @@ class SingleExperience extends Component {
     let data = {
       user: user.uid,
       experience: experience,
+      host: experience.user,
       date: reservation.selectedDate
     }
     dispatch(ExperienceActions.reserve(data));

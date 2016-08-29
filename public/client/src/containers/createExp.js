@@ -39,7 +39,7 @@ class CreateExp extends Component {
     let { dispatch, form, dates, images, user } = this.props;
     var geocoder = new google.maps.Geocoder();
     geocoder.geocode({ 'address': form.address.value + ',' + form.city.value + ',' + form.state.value}, function(res, status) {
-      if(status == 'OK') {
+      if(status === 'OK') {
         dispatch({
           type: 'CREATE_EXP',
           payload: {

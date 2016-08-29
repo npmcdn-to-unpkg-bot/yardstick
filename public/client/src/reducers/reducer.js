@@ -6,6 +6,7 @@ import Location from './singleLocation';
 import Experiences from './experiences';
 import Reservation from './reservation';
 import Messages from './messages';
+import Alert from './alert';
 //import reducers up here ...
 //import reducer1 from la la la
 
@@ -16,5 +17,6 @@ export default combineReducers({
   form: formReducer,
   experiences: Experiences,
   reservation: Reservation,
-  messages: Messages
+  messages: Messages,
+  alert: Alert
 });

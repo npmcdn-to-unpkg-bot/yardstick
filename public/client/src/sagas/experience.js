@@ -17,16 +17,16 @@ function* confirmRes(action) {
   console.log('action: ', action)
   try {
     const res = yield base.push('reservations', { data: action.payload });
-    var getExp = yield firebase.database().ref('experiences/' + action.payload.experience);
-    getExp.once('value', function(val) {
-      let whakamole = val.val()
-      console.log('mewosdfa? ', whakamole)
-      let data = {
-        : action.payload.user,
-
-      }
-      base.push('conversations', { data: })
-    });
+    // var getExp = yield firebase.database().ref('experiences/' + action.payload.experience);
+    // getExp.once('value', function(val) {
+      // let whakamole = val.val()
+      // console.log('mewosdfa? ', whakamole)
+      // let data = {
+      //   : action.payload.user,
+      //
+      // }
+      // base.push('conversations', { data: })
+    // });
     // console.log('dirt: ', result)
     // console.log('meow???', getExp)
     // action.payload.experience
@@ -35,7 +35,7 @@ function* confirmRes(action) {
     // yield base.push('conversations', { data:
     //     //something here
     // })
-    // yield browserHistory.push('/welcome');
+    yield browserHistory.push('/welcome');
   } catch(err) {
     console.log('didnt work dude')
   }
@@ -45,6 +45,7 @@ function* reserve(action) {
   try {
     yield put({ type: 'RESERVE_EXP', payload: {
       experience: action.payload.experience,
+      host: action.payload.host,
       reservedBy: action.payload.user,
       date: action.payload.date
     }});
@@ -68,43 +69,7 @@ function* createExp(action) {
   }
 }
 
-function* getUserExp(action) {
-  try{
-    const res = yield Reservations.find({ reservedBy: action.user }).fetch()
-    const newArray = res.map((r) => {
-      const exp = Experiences.find({ _id: r.experience }).fetch()
-      let newObj = {}
-      Object.assign(newObj, exp[0]);
-      newObj.reservationId = r._id;
-      newObj.confirmed = r.confirmed;
-      newObj.date = r.date;
-      return newObj;
-    })
-    yield put({
-      type: 'SET_USER_EXP',
-      payload: newArray
-    });
-  } catch(err) {
-    console.log('nope not this time')
-  }
-}
 
-function* getUserList(action) {
-  try{
-    const res = yield Experiences.find({ user: action.user }).fetch()
-    console.log('found em: ', res);
-    yield put({
-      type: 'SET_USER_LISTINGS',
-      payload: res
-    })
-  } catch(err) {
-
-  }
-}
-
-export function* getExperiences() {
-  yield* takeEvery('GET_EXPERIENCES', getExp)
-}
 
 export function* watchCreate() {
   yield* takeEvery('CREATE_EXP', createExp)
@@ -118,23 +83,12 @@ export function* watchConfirm() {
   yield* takeEvery('CONFIRM_RES', confirmRes)
 }
 
-export function* watchUserExp() {
-  yield* takeEvery('GET_USER_EXP', getUserExp)
-}
-
-export function* watchUserList() {
-  yield* takeEvery('GET_USER_LISTINGS', getUserList)
-}
 
 export default function* homeSaga() {
   yield [
-    getExperiences(),
-    // watchGetSingleExp(),
     watchCreate(),
     watchReserve(),
-    watchConfirm(),
-    watchUserExp(),
-    watchUserList()
+    watchConfirm()
     // more sagas go here...
   ];
 }
