@@ -16,26 +16,17 @@ var base = Rebase.createClass(config);
 function* confirmRes(action) {
   console.log('action: ', action)
   try {
-    const res = yield base.push('reservations', { data: action.payload });
-    // var getExp = yield firebase.database().ref('experiences/' + action.payload.experience);
-    // getExp.once('value', function(val) {
-      // let whakamole = val.val()
-      // console.log('mewosdfa? ', whakamole)
-      // let data = {
-      //   : action.payload.user,
-      //
-      // }
-      // base.push('conversations', { data: })
-    // });
-    // console.log('dirt: ', result)
-    // console.log('meow???', getExp)
-    // action.payload.experience
-    // action.payload.reservedBy
-    // action.payload.selectedDate
-    // yield base.push('conversations', { data:
-    //     //something here
-    // })
-    yield browserHistory.push('/welcome');
+    let wat = action.payload;
+
+    var getExp = yield firebase.database().ref('experiences/' + action.payload.experience);
+    getExp.once('value', function(val) {
+      let whakamole = val.val();
+      wat.host = whakamole.user;
+      base.push('reservations', { data: wat });
+      browserHistory.push('/welcome');
+    });
+
+
   } catch(err) {
     console.log('didnt work dude')
   }

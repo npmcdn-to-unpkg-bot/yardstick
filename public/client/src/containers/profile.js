@@ -41,7 +41,7 @@ class Profile extends Component {
       }
     });
 
-    base.fetch(`experiences`, {
+    base.bindToState(`experiences`, {
       context: this,
       state: 'hosting',
       asArray: true,
