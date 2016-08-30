@@ -17,6 +17,11 @@ class Profile extends Component {
   constructor(props){
     super(props);
 
+    this.state = {
+      myExperiences: [],
+      reservations: [],
+      hosting: []
+    }
 
   }
   componentDidMount() {
@@ -56,10 +61,49 @@ class Profile extends Component {
 
   render() {
     console.log('cracker jacks: ', this.state)
-
+    let reservations,
+      hosting,
+      myListings;
+      
+      if(this.state.reservations) {
+        reservations = this.state.reservations.map((res) => {
+          console.log('res: ', res);
+          return <div>Wat</div>
+        })
+      } else {
+        reservations = <div>Loading reservations...</div>
+      }
+      
+      if(this.state.hosting) {
+        hosting = this.state.hosting.map((host) => {
+          console.log('host: ', host);
+          return <div>hosting</div>
+        })
+      } else {
+        hosting = <div>Loading hosted experiences...</div>
+      }
+      
+      if(this.state.myExperiences) {
+        myListings = this.state.myExperiences.map((list) => {
+          console.log('my listing: ', list)
+          return <div>my listing</div>
+        })
+      } else {
+        myListings = <div>Loading my listings...</div>
+      }
     return(
       <div>
-      profile
+        <div>
+          {reservations}
+        </div>
+        
+        <div>
+          {hosting}
+        </div>
+        
+        <div>
+          {myListings}
+        </div>
 
       </div>
     )
