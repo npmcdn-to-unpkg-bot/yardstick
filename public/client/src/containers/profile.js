@@ -30,6 +30,7 @@ class Profile extends Component {
         equalTo: params.userId
       }
     });
+    
     base.syncState(`reservations`, {
       context: this,
       state: 'reservations',
@@ -39,14 +40,16 @@ class Profile extends Component {
         equalTo: params.userId
       }
     });
-    // base.syncState(`experiences`, {
-    //   context: this,
-    //   state: 'hosting',
-    //   asArray: true,
-    //   queries: {
-    //
-    //   }
-    // });
+
+    base.fetch(`experiences`, {
+      context: this,
+      state: 'hosting',
+      asArray: true,
+      queries: {
+        orderByChild: 'host',
+        equalTo: params.userId
+      }
+    });
   }
 
 
