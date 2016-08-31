@@ -21,7 +21,8 @@ class Profile extends Component {
       myExperiences: [],
       reservations: [],
       hosting: [],
-      pendingReservations: []
+      pendingReservations: [],
+      confirmedReservations: []
     }
     this.confirmRes = this.confirmRes.bind(this);
   }
@@ -68,17 +69,23 @@ class Profile extends Component {
         equalTo: params.userId
       },
       then(data) {
-        let expArray = [];
+        let confirmedArray = [];
+        let unconfirmed = [];
         data.forEach((res) => {
           let exp = firebase.database().ref('experiences/' + res.experience);
           exp.once('value', function(val) {
             let fullExp = val.val();
             Object.assign(res, fullExp);
-            expArray.push(res);
+            if(res.confirmed === true) {
+              confirmedArray.push(res)
+            } else {
+              unconfirmed.push(res)
+            }
           });;
         });
         this.setState({
-          pendingReservations: expArray
+          pendingReservations: unconfirmed,
+          confirmedReservations: confirmedArray
         });
       }
     })
@@ -109,6 +116,7 @@ class Profile extends Component {
     console.log('profile state', this.state)
     let reservations,
       pendingReservations,
+      confirmedReservations,
       myListings;
 
       if(this.state.reservations) {
