@@ -23,7 +23,7 @@ class Profile extends Component {
       hosting: [],
       pendingReservations: []
     }
-
+    this.confirmRes = this.confirmRes.bind(this);
   }
   componentDidMount() {
     let { params } = this.props;
@@ -95,6 +95,15 @@ class Profile extends Component {
   }
 
 
+  confirmRes(exp) {
+    let wat = {};
+    Object.assign(wat, exp);
+    wat.confirmed = true;
+    console.log('wat: ', wat);
+    base.update('reservations/' + exp.key, {
+      data: { confirmed: true }
+    });
+  }
 
   render() {
     console.log('profile state', this.state)
@@ -118,9 +127,9 @@ class Profile extends Component {
 
       if(this.state.pendingReservations) {
         pendingReservations = this.state.pendingReservations.map((host) => {
-          console.log('the hosted : ', host)
           return (<div>
               <h5>{host.title}</h5>
+              <button className="btn btn-primary" onClick={() => this.confirmRes(host)}>Confirm!</button>
           </div>)
         })
       } else {
