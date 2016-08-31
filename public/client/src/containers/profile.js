@@ -20,7 +20,8 @@ class Profile extends Component {
     this.state = {
       myExperiences: [],
       reservations: [],
-      hosting: []
+      hosting: [],
+      pendingReservations: []
     }
 
   }
@@ -44,7 +45,6 @@ class Profile extends Component {
         equalTo: params.userId
       },
       then(data) {
-        console.log('hesdafdf: ', data)
         let expArray = [];
         data.forEach((res) => {
           let exp = firebase.database().ref('experiences/' + res.experience);
@@ -54,12 +54,34 @@ class Profile extends Component {
             expArray.push(res);
           });;
         });
-        console.log(expArray)
         this.setState({
           reservations: expArray
         });
       }
     });
+
+    base.fetch(`reservations`, {
+      context: this,
+      asArray: true,
+      queries: {
+        orderByChild: 'host',
+        equalTo: params.userId
+      },
+      then(data) {
+        let expArray = [];
+        data.forEach((res) => {
+          let exp = firebase.database().ref('experiences/' + res.experience);
+          exp.once('value', function(val) {
+            let fullExp = val.val();
+            Object.assign(res, fullExp);
+            expArray.push(res);
+          });;
+        });
+        this.setState({
+          pendingReservations: expArray
+        });
+      }
+    })
 
     base.bindToState(`experiences`, {
       context: this,
@@ -75,16 +97,18 @@ class Profile extends Component {
 
 
   render() {
+    console.log('profile state', this.state)
     let reservations,
-      hosting,
+      pendingReservations,
       myListings;
 
       if(this.state.reservations) {
         reservations = this.state.reservations.map((res) => {
-          console.log('res: ', res);
           return (
             <div>
-              <h5></h5>
+              <h5>{res.title}</h5>
+              <span>{res.selectedDate}</span>
+              <p>{res.confirmed === true ? 'Reservation Confirmed!' : 'The host has not yet confirmed your reservation for this experience'}</p>
             </div>
         )
         })
@@ -92,19 +116,22 @@ class Profile extends Component {
         reservations = <div>Loading reservations...</div>
       }
 
-      if(this.state.hosting) {
-        hosting = this.state.hosting.map((host) => {
-          console.log('host: ', host);
-          return <div>hosting</div>
+      if(this.state.pendingReservations) {
+        pendingReservations = this.state.pendingReservations.map((host) => {
+          console.log('the hosted : ', host)
+          return (<div>
+              <h5>{host.title}</h5>
+          </div>)
         })
       } else {
-        hosting = <div>Loading hosted experiences...</div>
+        pendingReservations = <div>Loading hosted experiences...</div>
       }
 
       if(this.state.myExperiences) {
         myListings = this.state.myExperiences.map((list) => {
-          console.log('my listing: ', list)
-          return <div>my listing</div>
+          return (<div>
+                  <h5>{list.title}</h5>
+                </div>)
         })
       } else {
         myListings = <div>Loading my listings...</div>
@@ -112,14 +139,20 @@ class Profile extends Component {
     return(
       <div>
         <div>
+          <h3>My Reservations</h3>
+          <span>These are the experiences that you have reserved.</span>
           {reservations}
         </div>
 
         <div>
-          {hosting}
+          <h3>Pending Reservations</h3>
+          <span>These are reservations of your experiences</span>
+          {pendingReservations}
         </div>
 
         <div>
+          <h3>My Listings</h3>
+          <span>These are the experiences that you have listed</span>
           {myListings}
         </div>
 
