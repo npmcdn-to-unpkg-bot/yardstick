@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import Messages from '../components/messages'
-import config from '../config'
+import Messages from '../components/messages';
+import config from '../config';
 var Rebase = require('re-base');
 
 
@@ -13,6 +13,11 @@ class Profile extends Component {
     super(props);
 
     this.state = {
+      messaging: {
+        toSend: '',
+        sentMessages: [],
+        recMessages: []
+      },
       myExperiences: [],
       reservations: [],
       hosting: [],
@@ -20,6 +25,8 @@ class Profile extends Component {
       confirmedReservations: []
     }
     this.confirmRes = this.confirmRes.bind(this);
+    this.sendMessage = this.sendMessage.bind(this);
+    this.typeMessage = this.typeMessage.bind(this);
   }
   componentDidMount() {
     let { params } = this.props;
@@ -111,6 +118,14 @@ class Profile extends Component {
       data: { confirmed: true }
     });
   }
+  
+  sendMessage() {
+    
+  }
+  
+  typeMessage(e) {
+    
+  }
 
   render() {
     console.log('profile state', this.state)
@@ -169,6 +184,11 @@ class Profile extends Component {
       
     return(
       <div>
+        <Messages 
+          visible={this.state.messageVisible}
+          sendMessage={this.state.sendMessage}
+          typeMessage={this.state.typeMessage}
+        />
         <div>
           <h3>My Reservations</h3>
           <span>These are the experiences that you have reserved.</span>

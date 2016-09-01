@@ -10,8 +10,8 @@ export default class Messages extends Component {
         </Modal.Header>
         <Modal.Body>
           <h5>Messages go here</h5>
-          <form onSubmit={this.props.typeMessage}>
-            <textarea  />
+          <form onSubmit={this.props.sendMessage}>
+            <textarea onChange={this.props.typeMessage} />
             <button className="btn btn-primary">Send</button>
           </form>
         </Modal.Body>
