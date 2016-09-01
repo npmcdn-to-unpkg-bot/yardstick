@@ -1,15 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import Conversation from '../components/messages/conversation';
+import Messages from '../components/messages'
+import config from '../config'
 var Rebase = require('re-base');
 
-var config = {
-  apiKey: "AIzaSyAthBCq_uopCnlQn27DbBmQrHQVEJVfKRo",
-  authDomain: "outdoors-1380.firebaseapp.com",
-  databaseURL: "https://outdoors-1380.firebaseio.com",
-  storageBucket: "outdoors-1380.appspot.com",
-};
 
 var base = Rebase.createClass(config);
 
@@ -28,7 +23,7 @@ class Profile extends Component {
   }
   componentDidMount() {
     let { params } = this.props;
-    base.syncState(`experiences`, {
+    this.ref = base.syncState(`experiences`, {
       context: this,
       state: 'myExperiences',
       asArray: true,
@@ -38,7 +33,7 @@ class Profile extends Component {
       }
     });
 
-    base.fetch(`reservations`, {
+    this.ref2 = base.fetch(`reservations`, {
       context: this,
       asArray: true,
       queries: {
@@ -61,7 +56,7 @@ class Profile extends Component {
       }
     });
 
-    base.fetch(`reservations`, {
+    this.ref3 = base.fetch(`reservations`, {
       context: this,
       asArray: true,
       queries: {
@@ -90,7 +85,7 @@ class Profile extends Component {
       }
     })
 
-    base.bindToState(`experiences`, {
+    this.ref4 = base.bindToState(`experiences`, {
       context: this,
       state: 'hosting',
       asArray: true,
@@ -100,13 +95,18 @@ class Profile extends Component {
       }
     });
   }
-
+  
+  componentWillUnmount() {
+    base.removeBinding(this.ref)
+    base.removeBinding(this.ref2)
+    base.removeBinding(this.ref3)
+    base.removeBinding(this.ref4)
+  }
 
   confirmRes(exp) {
     let wat = {};
     Object.assign(wat, exp);
     wat.confirmed = true;
-    console.log('wat: ', wat);
     base.update('reservations/' + exp.key, {
       data: { confirmed: true }
     });
@@ -116,7 +116,7 @@ class Profile extends Component {
     console.log('profile state', this.state)
     let reservations,
       pendingReservations,
-      confirmedReservations,
+      confirmedRes,
       myListings;
 
       if(this.state.reservations) {
@@ -153,6 +153,20 @@ class Profile extends Component {
       } else {
         myListings = <div>Loading my listings...</div>
       }
+      
+      if(this.state.confirmedReservations) {
+        confirmedRes = this.state.confirmedReservations.map((res) => {
+          return (
+            <div>
+              <h5>{res.title}</h5>
+            </div>
+          )
+        })
+      } else {
+        confirmedRes = <div> Loading confirmed reservations... </div>
+      }
+
+      
     return(
       <div>
         <div>
@@ -166,7 +180,13 @@ class Profile extends Component {
           <span>These are reservations of your experiences</span>
           {pendingReservations}
         </div>
-
+        
+        <div>
+          <h3>Confirmed Reservations</h3>
+          <span>These are confirmed experiences that you are hosting.</span>
+          {confirmedRes}
+        </div>
+        
         <div>
           <h3>My Listings</h3>
           <span>These are the experiences that you have listed</span>
