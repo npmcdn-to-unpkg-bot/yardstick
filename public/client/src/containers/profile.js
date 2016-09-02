@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import Messages from '../components/messages';
 import config from '../config';
+// import dog from '../dog';
 var Rebase = require('re-base');
 
 
@@ -14,6 +15,7 @@ class Profile extends Component {
 
     this.state = {
       messaging: {
+        messageVisible: false,
         toSend: '',
         sentMessages: [],
         recMessages: []
@@ -27,6 +29,7 @@ class Profile extends Component {
     this.confirmRes = this.confirmRes.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
     this.typeMessage = this.typeMessage.bind(this);
+    this.dismiss = this.dismiss.bind(this);
   }
   componentDidMount() {
     let { params } = this.props;
@@ -124,7 +127,25 @@ class Profile extends Component {
   }
   
   typeMessage(e) {
+    console.log(e.target.value)
+  
+    this.setState({
+      messaging: {
+          
+      }
+    })
     
+  }
+  
+  dismiss() {
+    this.setState({
+      ...this.state,
+      messaging: {
+        messageVisible: false,
+        sentMessages: [],
+        recMessages: []
+      }
+    });
   }
 
   render() {
@@ -141,6 +162,7 @@ class Profile extends Component {
               <h5>{res.title}</h5>
               <span>{res.selectedDate}</span>
               <p>{res.confirmed === true ? 'Reservation Confirmed!' : 'The host has not yet confirmed your reservation for this experience'}</p>
+              <span onClick={() => this.setState({ ...this.state, messaging: { ...this.state.messaging, messageVisible: true }})}>Message</span>
             </div>
         )
         })
@@ -185,9 +207,10 @@ class Profile extends Component {
     return(
       <div>
         <Messages 
-          visible={this.state.messageVisible}
-          sendMessage={this.state.sendMessage}
-          typeMessage={this.state.typeMessage}
+          visible={this.state.messaging.messageVisible}
+          sendMessage={this.sendMessage}
+          typeMessage={this.typeMessage}
+          dismiss={this.dismiss}
         />
         <div>
           <h3>My Reservations</h3>

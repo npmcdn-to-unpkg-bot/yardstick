@@ -6,7 +6,7 @@ export default class Messages extends Component {
     return(
       <Modal show={this.props.visible} onHide={this.props.dismiss}>
         <Modal.Header closeButton>
-          <Modal.Title>Chat with {this.props.otherUser.name}</Modal.Title>
+          <Modal.Title>Chat with somebody</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <h5>Messages go here</h5>
