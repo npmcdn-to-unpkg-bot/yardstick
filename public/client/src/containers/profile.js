@@ -56,7 +56,7 @@ class Profile extends Component {
           let exp = firebase.database().ref('experiences/' + res.experience);
           exp.once('value', function(val) {
             let fullExp = val.val();
-            Object.assign(res, fullExp);
+            res.experience = fullExp;
             expArray.push(res);
           });;
         });
@@ -80,7 +80,7 @@ class Profile extends Component {
           let exp = firebase.database().ref('experiences/' + res.experience);
           exp.once('value', function(val) {
             let fullExp = val.val();
-            Object.assign(res, fullExp);
+            res.experience = fullExp;
             if(res.confirmed === true) {
               confirmedArray.push(res)
             } else {
@@ -105,7 +105,7 @@ class Profile extends Component {
       }
     });
   }
-  
+
   componentWillUnmount() {
     base.removeBinding(this.ref)
     base.removeBinding(this.ref2)
@@ -114,6 +114,7 @@ class Profile extends Component {
   }
 
   confirmRes(exp) {
+    console.log('turnt: ', exp)
     let wat = {};
     Object.assign(wat, exp);
     wat.confirmed = true;
@@ -121,22 +122,22 @@ class Profile extends Component {
       data: { confirmed: true }
     });
   }
-  
+
   sendMessage() {
-    
+
   }
-  
+
   typeMessage(e) {
     console.log(e.target.value)
-  
+
     this.setState({
       messaging: {
-          
+
       }
     })
-    
+
   }
-  
+
   dismiss() {
     this.setState({
       ...this.state,
@@ -155,8 +156,9 @@ class Profile extends Component {
       confirmedRes,
       myListings;
 
-      if(this.state.reservations) {
+      if(this.state.reservations && this.state.reservations.length > 0) {
         reservations = this.state.reservations.map((res) => {
+          console.log('mapping reservations...', res)
           return (
             <div>
               <h5>{res.title}</h5>
@@ -170,10 +172,10 @@ class Profile extends Component {
         reservations = <div>Loading reservations...</div>
       }
 
-      if(this.state.pendingReservations) {
+      if(this.state.pendingReservations && this.state.pendingReservations.length > 0) {
         pendingReservations = this.state.pendingReservations.map((host) => {
           return (<div>
-              <h5>{host.title}</h5>
+              <h5>{host.experience.title}</h5>
               <button className="btn btn-primary" onClick={() => this.confirmRes(host)}>Confirm!</button>
           </div>)
         })
@@ -181,7 +183,7 @@ class Profile extends Component {
         pendingReservations = <div>Loading hosted experiences...</div>
       }
 
-      if(this.state.myExperiences) {
+      if(this.state.myExperiences && this.state.myExperiences.length > 0) {
         myListings = this.state.myExperiences.map((list) => {
           return (<div>
                   <h5>{list.title}</h5>
@@ -190,8 +192,8 @@ class Profile extends Component {
       } else {
         myListings = <div>Loading my listings...</div>
       }
-      
-      if(this.state.confirmedReservations) {
+
+      if(this.state.confirmedReservations && this.state.confirmedReservations.length > 0) {
         confirmedRes = this.state.confirmedReservations.map((res) => {
           return (
             <div>
@@ -203,39 +205,40 @@ class Profile extends Component {
         confirmedRes = <div> Loading confirmed reservations... </div>
       }
 
-      
+
     return(
       <div>
-        <Messages 
+        <Messages
           visible={this.state.messaging.messageVisible}
           sendMessage={this.sendMessage}
           typeMessage={this.typeMessage}
           dismiss={this.dismiss}
         />
-        <div>
+        <div className="row">
+        <div className="col-md-6">
           <h3>My Reservations</h3>
           <span>These are the experiences that you have reserved.</span>
           {reservations}
         </div>
 
-        <div>
+        <div className="col-md-6">
           <h3>Pending Reservations</h3>
           <span>These are reservations of your experiences</span>
           {pendingReservations}
         </div>
-        
-        <div>
+
+        <div className="col-md-6">
           <h3>Confirmed Reservations</h3>
           <span>These are confirmed experiences that you are hosting.</span>
           {confirmedRes}
         </div>
-        
-        <div>
+
+        <div className="col-md-6">
           <h3>My Listings</h3>
           <span>These are the experiences that you have listed</span>
           {myListings}
         </div>
-
+        </div>
       </div>
     )
   }
