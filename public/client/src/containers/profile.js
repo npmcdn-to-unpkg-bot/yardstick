@@ -66,7 +66,7 @@ class Profile extends Component {
       }
     });
 
-    this.ref3 = base.fetch(`reservations`, {
+    this.ref3 = base.listenTo(`reservations`, {
       context: this,
       asArray: true,
       queries: {
