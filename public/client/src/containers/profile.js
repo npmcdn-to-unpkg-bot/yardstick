@@ -65,15 +65,7 @@ class Profile extends Component {
     base.removeBinding(this.ref2)
   }
 
-  confirmRes(exp) {
-    console.log('turnt: ', exp)
-    let wat = {};
-    Object.assign(wat, exp);
-    wat.confirmed = true;
-    base.update('reservations/' + exp.key, {
-      data: { confirmed: true }
-    });
-  }
+
 
   sendMessage() {
 

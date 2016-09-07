@@ -23,7 +23,7 @@ class Hosted extends Component{
       hosting: [],
       reservations: []
     }
-    // this.confirmRes = this.confirmRes.bind(this);
+    this.confirmRes = this.confirmRes.bind(this);
     // this.sendMessage = this.sendMessage.bind(this);
     // this.typeMessage = this.typeMessage.bind(this);
     // this.dismiss = this.dismiss.bind(this);
@@ -46,7 +46,7 @@ class Hosted extends Component{
       state: 'hosting',
       asArray: true,
       queries: {
-        orderByChild: 'host',
+        orderByChild: 'user',
         equalTo: params.userId
       }
     });
@@ -57,6 +57,15 @@ class Hosted extends Component{
     base.removeBinding(this.ref4)
   }
   
+  confirmRes(exp) {
+    console.log('turnt: ', exp)
+    let wat = {};
+    Object.assign(wat, exp);
+    wat.confirmed = true;
+    base.update('reservations/' + exp.key, {
+      data: { confirmed: true }
+    });
+  }
   
   render() {
     console.log('hosting state: ', this.state)
@@ -65,10 +74,11 @@ class Hosted extends Component{
     
     if(this.state.hosting && this.state.hosting.length > 0) {
       hosting = this.state.hosting.map((host) => {
-        console.log('hosting...', host)
         return(
           <div>
-            ok
+            <h5>{host.title}</h5>
+            <span>{host.city}, {host.state}</span>
+            {host.images ? host.images.map((img) => <img style={{ maxWidth: '25%', display: 'block'}} src={img.url} />) : <div>No images</div>}
           </div>
         )
       })
@@ -81,7 +91,11 @@ class Hosted extends Component{
         console.log('res...', res)
         return(
           <div>
-            wat
+            <h5>{res.experienceTitle ? res.experienceTitle : 'no title available'}</h5>
+            <span>{res.selectedDate}</span>
+            <span>Reserved By: {res.reservedBy}</span>
+            <span>Status: {res.confirmed ? 'Confirmed!' : 'Not confirmed yet. Confirm this reservation to officially schedule it.'}</span>
+            <button style={{ display: res.confirmed ? 'none' : 'inline-block' }} onClick={this.confirmRes.bind(null, res)}>Confirm</button>
           </div>
         )
       })
