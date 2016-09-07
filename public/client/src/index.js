@@ -18,6 +18,8 @@ import verifyEmail from './containers/verify';
 import about from './containers/about';
 import Profile from './containers/profile';
 import Nav from './containers/nav';
+import Hosted from './containers/hosted';
+import MyExperiences from './containers/myExperiences';
 
 // if ('serviceWorker' in navigator) {
 //     console.log('Service Worker is supported');
@@ -58,6 +60,8 @@ ReactDOM.render(
         <Route path="/createExperience" component={CreateExp} />
         <Route path="/reservation/:experienceId" component={Reservation} />
         <Route path="/profile/:userId" component={Profile} />
+        <Route path="/hosted/:userId" component={Hosted} />
+        <Route path="/myExperiences/:userId" component={MyExperiences} />
       </Route>
     </Router>
   </Provider>

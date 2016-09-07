@@ -18,21 +18,6 @@ export default class Navigation extends Component{
   }
 
   render() {
-    // let childs;
-    // if(!this.props.currentUser) {
-    //   childs = <div>Loading...</div>
-    // } else {
-    //   childs = this.props.children
-    // }
-    // //current user prop is set by Meteor- we want it available in redux
-    // this.setUser(this.props.currentUser);
-    //
-    // let user;
-    //   if(!this.props.currentUser) {
-    //     user = '!'
-    //   } else {
-    //     user = ' ' + this.props.currentUser.profile.firstName + '!';
-    //   }
       return (
         <div>
           <Navbar>
@@ -45,6 +30,8 @@ export default class Navigation extends Component{
               <Link to="/welcome">Home</Link>
               <Link to="/createExperience">Create Experience</Link>
               <Link to={"/profile/" + this.props.user.uid}>Profile</Link>
+              <Link to={"/myExperiences/" + this.props.user.uid}>My Experiences</Link>
+              <Link to={"/hosted/" + this.props.user.uid}>Host Dashboard</Link>
             </Nav>
           </Navbar>
             <div className="content-main">
@@ -52,7 +39,6 @@ export default class Navigation extends Component{
             </div>
           </div>
         )
-
   }
 }
 

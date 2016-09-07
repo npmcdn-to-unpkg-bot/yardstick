@@ -34,7 +34,8 @@ class Reservation extends Component {
       completed: false,
       selectedDate: res.selectedDate,
       reservedBy: res.reservation.reservedBy,
-      experience: params.experienceId
+      experience: params.experienceId,
+      experienceTitle: res.reservation.experience.title
     }
 
     console.log('deets: ', reservation);
