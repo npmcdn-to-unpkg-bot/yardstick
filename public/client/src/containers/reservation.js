@@ -33,12 +33,12 @@ class Reservation extends Component {
       confirmed: false,
       completed: false,
       selectedDate: res.selectedDate,
+      host: res.reservation.experience.user,
       reservedBy: res.reservation.reservedBy,
       experience: params.experienceId,
       experienceTitle: res.reservation.experience.title
     }
 
-    console.log('deets: ', reservation);
     dispatch(ExperienceActions.confirmRes(reservation));
   }
 

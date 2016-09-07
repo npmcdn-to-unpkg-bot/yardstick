@@ -113,9 +113,9 @@ class Welcome extends Component {
           }>{marker.title}</h5>
           <p>{marker.description}</p>
           <div className="imgRow">
-            {marker.images.map((img)=>{
+            {marker.images && marker.images.length > 0 ? marker.images.map((img)=>{
               return <img src={img.url} />
-            })}
+            }) : <div>No images</div>}
           </div>
         </div>
       </InfoWindow>

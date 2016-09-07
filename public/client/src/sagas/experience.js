@@ -3,12 +3,7 @@ import { call, put, fork } from 'redux-saga/effects';
 import { browserHistory } from 'react-router';
 var Rebase = require('re-base');
 
-var config = {
-  apiKey: "AIzaSyAthBCq_uopCnlQn27DbBmQrHQVEJVfKRo",
-  authDomain: "outdoors-1380.firebaseapp.com",
-  databaseURL: "https://outdoors-1380.firebaseio.com",
-  storageBucket: "outdoors-1380.appspot.com",
-};
+import config from '../config';
 
 var base = Rebase.createClass(config);
 
@@ -16,15 +11,20 @@ var base = Rebase.createClass(config);
 function* confirmRes(action) {
   console.log('action: ', action)
   try {
+    var newChatKey = base.database().ref().child('chats').push().key;   
+    console.log('the new key: ', newChatKey)
     let wat = action.payload;
-
-    var getExp = yield firebase.database().ref('experiences/' + action.payload.experience);
-    getExp.once('value', function(val) {
-      let whakamole = val.val();
-      wat.host = whakamole.user;
-      base.push('reservations', { data: wat });
-      browserHistory.push('/welcome');
+    wat.chat = newChatKey;
+    yield base.push('reservations', { data: wat });
+    yield base.update('chats/' + newChatKey, {
+      data: {
+        users: {
+          user1: action.payload.host,
+          user2: action.payload.reservedBy
+        }
+      }
     });
+    yield browserHistory.push('/welcome');
 
 
   } catch(err) {
@@ -38,7 +38,8 @@ function* reserve(action) {
       experience: action.payload.experience,
       host: action.payload.host,
       reservedBy: action.payload.user,
-      date: action.payload.date
+      date: action.payload.date,
+      chat: action.payload.chat
     }});
     yield browserHistory.push('/reservation/' + action.payload.experience.key);
   } catch(err) {

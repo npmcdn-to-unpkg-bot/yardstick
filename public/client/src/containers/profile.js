@@ -82,16 +82,7 @@ class Profile extends Component {
 
   }
 
-  dismiss() {
-    this.setState({
-      ...this.state,
-      messaging: {
-        messageVisible: false,
-        sentMessages: [],
-        recMessages: []
-      }
-    });
-  }
+
 
   render() {
     
