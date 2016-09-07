@@ -24,6 +24,15 @@ function* confirmRes(action) {
         }
       }
     });
+    yield base.update('messages/' + newChatKey, {
+      data:{
+        m1: {
+          from: 'Outdoors Admin!',
+          to: action.payload.host,
+          message: 'Your experience has been reserved! Chat with the user here to work out the details.'
+        }
+      }
+    })
     yield browserHistory.push('/welcome');
 
 

@@ -28,6 +28,7 @@ class Hosted extends Component{
     this.sendMessage = this.sendMessage.bind(this);
     this.typeMessage = this.typeMessage.bind(this);
     this.dismiss = this.dismiss.bind(this);
+    this.openChat = this.openChat.bind(this);
   }
   
   componentDidMount() {
@@ -68,9 +69,6 @@ class Hosted extends Component{
       from: params.userId,
       message: message
     }
-    base.push('messages', {
-      data: data
-    })
   }
   
   confirmRes(exp) {
@@ -86,7 +84,7 @@ class Hosted extends Component{
         messageVisible: false,
         sentMessages: [],
         recMessages: [],
-        user: ''
+        reservation: ''
       }
     });
   }
@@ -98,6 +96,39 @@ class Hosted extends Component{
         toSend: e.target.value
       }
     });
+  }
+  
+  openChat(res) {
+    // console.log('res: ', res)
+    let { params } = this.props;
+    let recMessages = [];
+    let sentMessages = [];
+    
+    base.listenTo('messages/' + res.chat, {
+      context: this,
+      asArray: true,
+      then(msg) {
+        console.log('did we find any? ', msg)
+        msg.forEach((m) => {
+          if(m.to === params.userId) {
+            recMessages.push(m)
+          } else {
+            sentMessages.push(m)
+          }
+        });
+        
+        this.setState({
+          messaging: {
+            messageVisible: true,
+            toSend: '',
+            sentMessages: sentMessages,
+            recMessages: recMessages
+          }
+        });
+        
+      }
+    })
+    // this.setState({ messaging: { ...this.state.messaging, messageVisible: true }})
   }
   
   render() {
@@ -129,7 +160,7 @@ class Hosted extends Component{
             <span>Reserved By: {res.reservedBy}</span>
             <span>Status: {res.confirmed ? 'Confirmed!' : 'Not confirmed yet. Confirm this reservation to officially schedule it.'}</span>
             <button style={{ display: res.confirmed ? 'none' : 'inline-block' }} onClick={this.confirmRes.bind(null, res)}>Confirm</button>
-            <span onClick={() => this.setState({ messaging: { ...this.state.messaging, messageVisible: true, user: res.reservedBy }})}>Message</span>
+            <span onClick={this.openChat.bind(null, res)}>Message</span>
             <hr />
           </div>
         )
