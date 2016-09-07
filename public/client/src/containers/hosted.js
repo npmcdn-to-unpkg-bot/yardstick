@@ -14,11 +14,11 @@ class Hosted extends Component{
     super(props);
 
     this.state = {
+      messages: [],
       messaging: {
         messageVisible: false,
+        chat: '',
         toSend: '',
-        sentMessages: [],
-        recMessages: [],
         user: ''
       },
       hosting: [],
@@ -62,13 +62,25 @@ class Hosted extends Component{
   sendMessage(e) {
     e.preventDefault();
     let message = this.state.messaging.toSend;
-    let user = this.state.messaging.user;
-    let { params } = this.props;
-    let data = {
-      to: user,
-      from: params.userId,
-      message: message
+    if(this.state.messaging.toSend.length === 0) {
+      return;
+    } else {
+      let user = this.state.messaging.user;
+      let { params } = this.props;
+      let data = {
+        to: user,
+        from: params.userId,
+        message: message
+      }
+      this.setState({
+        messages: this.state.messages.concat([data]),
+        messaging: {
+          ...this.state.messaging,
+          toSend: ''
+        }
+      });  
     }
+    document.getElementById('messageArea').value = '';
   }
   
   confirmRes(exp) {
@@ -81,12 +93,14 @@ class Hosted extends Component{
     this.setState({
       ...this.state,
       messaging: {
+        toSend: '',
         messageVisible: false,
         sentMessages: [],
         recMessages: [],
         reservation: ''
       }
     });
+    base.removeBinding(this.messageRef);
   }
   
   typeMessage(e) {
@@ -99,30 +113,22 @@ class Hosted extends Component{
   }
   
   openChat(res) {
-    // console.log('res: ', res)
+    console.log('res: ', res)
     let { params } = this.props;
     let recMessages = [];
     let sentMessages = [];
     
-    base.listenTo('messages/' + res.chat, {
+    this.messageRef = base.syncState('messages/' + res.chat, {
       context: this,
+      state: 'messages',
       asArray: true,
-      then(msg) {
-        console.log('did we find any? ', msg)
-        msg.forEach((m) => {
-          if(m.to === params.userId) {
-            recMessages.push(m)
-          } else {
-            sentMessages.push(m)
-          }
-        });
-        
+      then() {
         this.setState({
           messaging: {
             messageVisible: true,
+            chat: res.chat,
             toSend: '',
-            sentMessages: sentMessages,
-            recMessages: recMessages
+            user: res.reservedBy
           }
         });
         
@@ -170,13 +176,12 @@ class Hosted extends Component{
     return(
       <div>
         <Messages
+          messages={this.state.messages}
           visible={this.state.messaging.messageVisible}
           sendMessage={this.sendMessage}
           typeMessage={this.typeMessage}
-          user={this.state.messaging.user}
+          user={this.props.params.userId}
           dismiss={this.dismiss}
-          sentMessages={this.state.messaging.sentMessages}
-          recMessages={this.state.messaging.recMessages}
         />
         <div className="row">
           <div className="col-md-6">
