@@ -61,7 +61,7 @@ export default class Messages extends Component {
           <Modal.Title>Chat with somebody</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="row">
+          <div className="row" id="messageContainer">
             {messages}
           </div>
           <form onSubmit={this.props.sendMessage}>

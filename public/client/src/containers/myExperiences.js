@@ -87,6 +87,8 @@ class MyExperiences extends Component{
       });
     }
     document.getElementById('messageArea').value = '';
+    var objDiv = document.getElementById("messageContainer");
+    objDiv.scrollTop = objDiv.scrollHeight;
   }
 
   confirmRes(exp) {
