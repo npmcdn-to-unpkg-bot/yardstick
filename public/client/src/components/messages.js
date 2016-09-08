@@ -46,9 +46,9 @@ export default class Messages extends Component {
       })
       messages = newArray.map((msg, i) => {
         if(msg.from === this.props.user) {
-          return <div key={i} className="msgFrom" style={{ float: 'right', width: '40%', backgroundColor: 'blue' }}>{msg.message}</div>
+          return <div key={i} className="msgFrom"><p>{msg.message}</p></div>
         } else {
-          return <div key={i} className="msgTo" style={{ float: 'left', width: '40%', backgroundColor: 'green' }}>{msg.message}</div>
+          return <div key={i} className="msgTo"><p>{msg.message}</p></div>
         }
       })
     } else {

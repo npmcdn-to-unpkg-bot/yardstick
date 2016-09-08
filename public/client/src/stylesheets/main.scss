@@ -404,3 +404,22 @@ td.rdtYear:hover {
   font-size: 1.2em;
   margin-top: 37px;
 }
+
+.msgFrom{
+  margin: 2px 0;
+  p{
+    background-color: green;
+    width:75%;
+    float: right;
+    border-radius: 5px;
+  }
+}
+.msgTo{
+  margin: 2px 0;
+  p{
+    background-color: blue;
+    width: 75%;
+    float: left;
+    border-radius: 5px;
+  }
+}
