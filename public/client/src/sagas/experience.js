@@ -7,11 +7,10 @@ import config from '../config';
 
 var base = Rebase.createClass(config);
 
-
 function* confirmRes(action) {
   console.log('action: ', action)
   try {
-    var newChatKey = base.database().ref().child('chats').push().key;   
+    var newChatKey = base.database().ref().child('chats').push().key;
     console.log('the new key: ', newChatKey)
     let wat = action.payload;
     wat.chat = newChatKey;
@@ -29,7 +28,8 @@ function* confirmRes(action) {
         m1: {
           from: 'Outdoors Admin!',
           to: action.payload.host,
-          message: 'Your experience has been reserved! Chat with the user here to work out the details.'
+          message: 'Your experience has been reserved! Chat with the user here to work out the details.',
+          time: Date.now()
         }
       }
     })

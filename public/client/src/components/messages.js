@@ -12,26 +12,49 @@ export default class Messages extends Component {
 
   componentWillReceiveProps(props) {
     console.log('dem props: ', props)
-    if(props.messages && props.messages.length > 0) {
-      let sentMessages = [];
-      let recMessages = [];
-      props.messages.forEach((msg) => {
-        if(msg.from === props.user) {
-          sentMessages.push(msg)
-        } else {
-          recMessages.push(msg)
-        }
-      });
-      this.setState({
-        sentMessages: sentMessages,
-        recMessages: recMessages
-      });
-    }
+    // if(props.messages && props.messages.length > 0) {
+    //   let sentMessages = [];
+    //   let recMessages = [];
+    //   props.messages.forEach((msg) => {
+    //     console.log('AHAHAAHHAHA: ', msg)
+    //     if(msg.from === props.user) {
+    //       sentMessages.push(msg)
+    //     } else {
+    //       recMessages.push(msg)
+    //     }
+    //   });
+    //   this.setState({
+    //     sentMessages: sentMessages,
+    //     recMessages: recMessages
+    //   });
+    // }
   }
-  
+
   render() {
-    
-    
+    console.log('the message props n stuff: ', this.state)
+    let messages;
+    if(this.props.messages && this.props.messages.length > 0) {
+      let newArray = [ ...this.props.messages ];
+      newArray.sort((a, b) => {
+        if(a.time > b.time) {
+          return 1;
+        }
+        if(a.time < b.time) {
+          return -1;
+        }
+        return 0;
+      })
+      messages = newArray.map((msg, i) => {
+        if(msg.from === this.props.user) {
+          return <div key={i} className="msgFrom" style={{ float: 'right', width: '40%', backgroundColor: 'blue' }}>{msg.message}</div>
+        } else {
+          return <div key={i} className="msgTo" style={{ float: 'left', width: '40%', backgroundColor: 'green' }}>{msg.message}</div>
+        }
+      })
+    } else {
+      messages = <div>no messages </div>
+    }
+
     return(
       <Modal show={this.props.visible} onHide={this.props.dismiss}>
         <Modal.Header closeButton>
@@ -39,12 +62,7 @@ export default class Messages extends Component {
         </Modal.Header>
         <Modal.Body>
           <div className="row">
-            <div className="col-md-6">
-              {this.state.recMessages.length ? this.state.recMessages.map((msg) => <div>{msg.message}</div>) : <div/>}
-            </div>
-            <div className="col-md-6">
-              {this.state.sentMessages.length ? this.state.sentMessages.map((msg) => <div>{msg.message}</div>) : <div/>}
-            </div>
+            {messages}
           </div>
           <form onSubmit={this.props.sendMessage}>
             <textarea onChange={this.props.typeMessage} id="messageArea"/>
