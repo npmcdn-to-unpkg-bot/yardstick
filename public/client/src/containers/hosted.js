@@ -19,7 +19,7 @@ class Hosted extends Component{
         messageVisible: false,
         chat: '',
         toSend: '',
-        user: ''
+        user: {}
       },
       hosting: [],
       reservations: []
@@ -30,7 +30,7 @@ class Hosted extends Component{
     this.dismiss = this.dismiss.bind(this);
     this.openChat = this.openChat.bind(this);
   }
-  
+
   componentDidMount() {
     let { params } = this.props;
     this.ref3 = base.syncState(`reservations`, {
@@ -53,19 +53,19 @@ class Hosted extends Component{
       }
     });
   }
-  
+
   componentWillUnmount() {
     base.removeBinding(this.ref3)
     base.removeBinding(this.ref4)
   }
-  
+
   sendMessage(e) {
     e.preventDefault();
     let message = this.state.messaging.toSend;
     if(this.state.messaging.toSend.length === 0) {
       return;
     } else {
-      let user = this.state.messaging.user;
+      let user = this.state.messaging.user.to;
       let { params } = this.props;
       let data = {
         to: user,
@@ -78,22 +78,23 @@ class Hosted extends Component{
           ...this.state.messaging,
           toSend: ''
         }
-      });  
+      });
     }
     document.getElementById('messageArea').value = '';
   }
-  
+
   confirmRes(exp) {
     base.update('reservations/' + exp.key, {
       data: { confirmed: true }
     });
   }
-  
+
   dismiss() {
     this.setState({
       ...this.state,
       messaging: {
         toSend: '',
+        user: {},
         messageVisible: false,
         sentMessages: [],
         recMessages: [],
@@ -102,7 +103,7 @@ class Hosted extends Component{
     });
     base.removeBinding(this.messageRef);
   }
-  
+
   typeMessage(e) {
     this.setState({
       messaging: {
@@ -111,13 +112,13 @@ class Hosted extends Component{
       }
     });
   }
-  
+
   openChat(res) {
     console.log('res: ', res)
     let { params } = this.props;
     let recMessages = [];
     let sentMessages = [];
-    
+
     this.messageRef = base.syncState('messages/' + res.chat, {
       context: this,
       state: 'messages',
@@ -128,20 +129,23 @@ class Hosted extends Component{
             messageVisible: true,
             chat: res.chat,
             toSend: '',
-            user: res.reservedBy
+            user: {
+              to: res.reservedBy,
+              from: res.host
+            }
           }
         });
-        
+
       }
     })
     // this.setState({ messaging: { ...this.state.messaging, messageVisible: true }})
   }
-  
+
   render() {
     console.log('hosting state: ', this.state)
     let hosting,
       reservations;
-    
+
     if(this.state.hosting && this.state.hosting.length > 0) {
       hosting = this.state.hosting.map((host) => {
         return(
@@ -156,7 +160,7 @@ class Hosted extends Component{
     } else {
       hosting = <div>No experiences found.</div>
     }
-    
+
     if(this.state.reservations && this.state.reservations.length > 0) {
       reservations = this.state.reservations.map((res) => {
         return(
@@ -172,7 +176,7 @@ class Hosted extends Component{
         )
       })
     }
-    
+
     return(
       <div>
         <Messages

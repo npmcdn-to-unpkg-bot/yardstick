@@ -19,7 +19,7 @@ class MyExperiences extends Component{
       messaging: {
         messageVisible: false,
         chat: '',
-        user: '',
+        user: {},
         toSend: '',
         sentMessages: [],
         recMessages: []
@@ -70,7 +70,7 @@ class MyExperiences extends Component{
     if(this.state.messaging.toSend.length === 0) {
       return;
     } else {
-      let user = this.state.messaging.user;
+      let user = this.state.messaging.user.to;
       let { params } = this.props;
       let data = {
         to: user,
@@ -101,9 +101,8 @@ class MyExperiences extends Component{
       messaging: {
         toSend: '',
         messageVisible: false,
-        sentMessages: [],
-        recMessages: [],
-        reservation: ''
+        reservation: '',
+        user: {}
       }
     });
     base.removeBinding(this.messageRef);
@@ -134,7 +133,10 @@ class MyExperiences extends Component{
             messageVisible: true,
             chat: res.chat,
             toSend: '',
-            user: res.reservedBy
+            user: {
+              from: res.reservedBy,
+              to: res.host
+            }
           }
         });
 
