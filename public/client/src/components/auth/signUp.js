@@ -11,7 +11,8 @@ class SignUp extends Component {
       <span onClick={this.props.dismiss}>X</span>
         <div className="input-field">
           <label>Email*</label>
-          <input type="text" placeholder="Email" {...email} required id="email"/>
+          <input type="text" placeholder="Email" {...email} required id="email" onBlur={this.props.validateEmail}/>
+          <span style={{ color: 'red', fontSize: '10px', display: this.props.invalidEmail ? 'block' : 'none' }}>Invalid Email</span>
         </div>
         <div className="input-field">
           <label>Password*</label>

@@ -1,5 +1,5 @@
-import { takeEvery, takeLatest } from 'redux-saga';
-import { call, put, fork } from 'redux-saga/effects';
+import { takeEvery } from 'redux-saga';
+// import { call, put, fork } from 'redux-saga/effects';
 import { browserHistory } from 'react-router';
 var Rebase = require('re-base');
 
@@ -8,10 +8,8 @@ import config from '../config';
 var base = Rebase.createClass(config);
 
 function* confirmRes(action) {
-  console.log('action: ', action)
   try {
     var newChatKey = base.database().ref().child('chats').push().key;
-    console.log('the new key: ', newChatKey)
     let wat = action.payload;
     wat.chat = newChatKey;
     yield base.push('reservations', { data: wat });

@@ -10,26 +10,6 @@ export default class Messages extends Component {
     }
   }
 
-  componentWillReceiveProps(props) {
-    console.log('dem props: ', props)
-    // if(props.messages && props.messages.length > 0) {
-    //   let sentMessages = [];
-    //   let recMessages = [];
-    //   props.messages.forEach((msg) => {
-    //     console.log('AHAHAAHHAHA: ', msg)
-    //     if(msg.from === props.user) {
-    //       sentMessages.push(msg)
-    //     } else {
-    //       recMessages.push(msg)
-    //     }
-    //   });
-    //   this.setState({
-    //     sentMessages: sentMessages,
-    //     recMessages: recMessages
-    //   });
-    // }
-  }
-
   render() {
     console.log('the message props n stuff: ', this.state)
     let messages;

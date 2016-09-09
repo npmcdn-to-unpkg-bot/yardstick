@@ -22,15 +22,14 @@ class Home extends Component{
     this.toggleSignIn = this.toggleSignIn.bind(this);
     this.toggleSignUp = this.toggleSignUp.bind(this);
     this.dismiss = this.dismiss.bind(this);
-  }
-
-  componentWillMount() {
-    this.setState({
+    this.validateEmail = this.validateEmail.bind(this);
+    this.state= {
       signIn: false,
       signUp: false,
       logInBtn: true,
-      signUpBtn: true
-    });
+      signUpBtn: true,
+      invalidEmail: false
+    }
   }
 
   dismiss() {
@@ -59,6 +58,26 @@ class Home extends Component{
       signUpBtn: false
     });
   }
+  
+  validateEmail() {
+    let email = this.props.form.signUp.email.value;
+    // console.log('the email: ', email);
+    superagent
+      .get('https://api.mailgun.net/v3/address/validate')
+      .auth('api', 'pubkey-252bed34819a680c8b154bf61ba4128b')
+      .use(jsonp)
+      .query({
+        address: email
+      })
+      .end((err, res) => {
+        console.log(err, res);
+        if(!res.body.isValid) {
+          this.setState({ invalidEmail: true })
+        } else {
+          this.setState({ invalidEmail: false })
+        }
+      })
+  }
 
 
   signIn(e) {
@@ -86,34 +105,27 @@ class Home extends Component{
     let password = form.signUp.password.value;
     let firstName = form.signUp.firstName.value;
     let lastName = form.signUp.lastName.value;
-
-    superagent
-      .get('https://api:pubkey-252bed34819a680c8b154bf61ba4128b@api.mailgun.net/v3/address/validate')
-      .use(jsonp)
-      .query({
-        address: email
-      })
-      .end(function(err, res){
-        console.log(err, res)
-        if(!res.body.isValid) {
-          console.log('turrrrrible error: ', err);
-          alert('Invalid Email!')
-        } else {
-          console.log('yayyyyyyyyyza: ', res)
-          base.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
-            var errorMessage = error.message;
-            if(errorMessage) {
-              alert(errorMessage)
-            }
-          }).then(function(user) {
-            base.database().ref('users/' + user.uid).set({
-              firstName: firstName,
-              lastName: lastName
-            });
-              browserHistory.push('/welcome')
-          });
+    
+    if(this.state.invalidEmail) {
+      return;
+    } else {
+      base.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+        var errorMessage = error.message;
+        if(errorMessage) {
+          alert(errorMessage)
         }
-      })
+      }).then(function(user) {
+        base.database().ref('users/' + user.uid).set({
+          firstName: firstName,
+          lastName: lastName
+        });
+        browserHistory.push('/welcome')
+      });
+    }
+    
+
+
+    
 
 
 
@@ -135,7 +147,7 @@ class Home extends Component{
               <SignIn signIn={this.signIn} dismiss={this.dismiss}/>
             </div>
             <div className="signUpForm" style={{ display: this.state.signUp ? "block" : "none" }}>
-              <SignUp signUp={this.signUp} dismiss={this.dismiss}/>
+              <SignUp signUp={this.signUp} dismiss={this.dismiss} validateEmail={this.validateEmail} invalidEmail={this.state.invalidEmail}/>
             </div>
           </div>
         </div>
