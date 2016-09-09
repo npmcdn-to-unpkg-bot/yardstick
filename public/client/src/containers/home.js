@@ -23,12 +23,14 @@ class Home extends Component{
     this.toggleSignUp = this.toggleSignUp.bind(this);
     this.dismiss = this.dismiss.bind(this);
     this.validateEmail = this.validateEmail.bind(this);
+    this.validatePassword = this.validatePassword.bind(this);
     this.state= {
       signIn: false,
       signUp: false,
       logInBtn: true,
       signUpBtn: true,
-      invalidEmail: false
+      invalidEmail: false,
+      invalidPassword: false
     }
   }
 
@@ -58,11 +60,24 @@ class Home extends Component{
       signUpBtn: false
     });
   }
-  
+  validatePassword() {
+    let password = this.props.form.signUp.password.value;
+    let re = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+    let valid = re.test(password);
+    console.log('valid??? ', valid)
+    if(!valid) {
+      this.setState({ invalidPassword: true });
+    } else {
+      this.setState({ invalidPassword: false });
+    }
+  }
   validateEmail() {
     let email = this.props.form.signUp.email.value;
     // console.log('the email: ', email);
-    superagent
+    if(!email.length) {
+      return; 
+    } else {
+      superagent
       .get('https://api.mailgun.net/v3/address/validate')
       .auth('api', 'pubkey-252bed34819a680c8b154bf61ba4128b')
       .use(jsonp)
@@ -76,7 +91,8 @@ class Home extends Component{
         } else {
           this.setState({ invalidEmail: false })
         }
-      })
+      });  
+    }
   }
 
 
@@ -106,7 +122,7 @@ class Home extends Component{
     let firstName = form.signUp.firstName.value;
     let lastName = form.signUp.lastName.value;
     
-    if(this.state.invalidEmail) {
+    if(this.state.invalidEmail || this.state.invalidPassword) {
       return;
     } else {
       base.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
@@ -147,7 +163,7 @@ class Home extends Component{
               <SignIn signIn={this.signIn} dismiss={this.dismiss}/>
             </div>
             <div className="signUpForm" style={{ display: this.state.signUp ? "block" : "none" }}>
-              <SignUp signUp={this.signUp} dismiss={this.dismiss} validateEmail={this.validateEmail} invalidEmail={this.state.invalidEmail}/>
+              <SignUp signUp={this.signUp} dismiss={this.dismiss} validateEmail={this.validateEmail} validatePassword={this.validatePassword} invalidPassword={this.state.invalidPassword} invalidEmail={this.state.invalidEmail}/>
             </div>
           </div>
         </div>
