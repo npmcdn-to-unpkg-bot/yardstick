@@ -1,16 +1,30 @@
 .signInForm{
   background-color: transparent;
+  h4{
+    width: 92%;
+    display: inline-block;
+  }
   span{
-    float: right;
+    display: inline-block;
+    width: 8%;
     background-color: #EEE;
     border-radius: 100%;
     font-size: 14px;
     cursor: pointer;
+    text-align: center;
   }
   form{
     padding: 10px;
     border-radius: 5px;
-
+    input{
+      width: 100%;
+    }
+    button{
+      width: 30%;
+      background-color: #00A0FF;
+      border: none;
+      color: #EEE;
+    }
     background-color: #EEE;
     .input-field{
       margin: 5px 0;
@@ -43,17 +57,32 @@
 
 .signUpForm{
   background-color: transparent;
+  h4{
+    width: 92%;
+    display: inline-block;
+  }
   span{
-    float: right;
+    display: inline-block;
+    width: 8%;
     background-color: #EEE;
     border-radius: 100%;
     font-size: 14px;
     cursor: pointer;
+    text-align: center;
   }
   form{
     padding: 10px;
     border-radius: 5px;
     background-color: #EEE;
+    input{
+      width: 100%;
+    }
+    button{
+      width: 30%;
+      border: none;
+      background-color: #00A0FF;
+      color: #EEE;
+    }
     .input-field{
       margin: 5px 0;
     }
@@ -441,7 +470,3 @@ td.rdtYear:hover {
   overflow-y: scroll;
   padding: 5px;
 }
-
-
-
-

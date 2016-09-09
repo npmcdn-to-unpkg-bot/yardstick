@@ -5,18 +5,14 @@ import SignUp from '../components/auth/signUp';
 import { Link, browserHistory } from 'react-router';
 import superagent from 'superagent';
 import 'react-google-maps';
+import config from '../config';
+// var validator = require('mailgun-validate-email')()
+let jsonp = require('superagent-jsonp');
 
 require('../stylesheets/main.scss');
 var Rebase = require('re-base');
-
-var config = {
-  apiKey: "AIzaSyAthBCq_uopCnlQn27DbBmQrHQVEJVfKRo",
-  authDomain: "outdoors-1380.firebaseapp.com",
-  databaseURL: "https://outdoors-1380.firebaseio.com",
-  storageBucket: "outdoors-1380.appspot.com",
-};
-
 var base = Rebase.createClass(config);
+
 class Home extends Component{
   constructor(props) {
     super(props);
@@ -27,7 +23,7 @@ class Home extends Component{
     this.toggleSignUp = this.toggleSignUp.bind(this);
     this.dismiss = this.dismiss.bind(this);
   }
-  
+
   componentWillMount() {
     this.setState({
       signIn: false,
@@ -73,43 +69,55 @@ class Home extends Component{
       password: form.signIn.password.value
     }
     base.auth().signInWithEmailAndPassword(user.email, user.password).catch(function(error) {
-      // Handle Errors here.
-      var errorCode = error.code;
       var errorMessage = error.message;
-      // ...
-      console.log('err? ', errorMessage)
+      if(errorMessage) {
+        alert(errorMessage)
+      }
+    }).then(function() {
+      browserHistory.push('/welcome');
     });
-    browserHistory.push('/welcome');
-
   }
 
   signUp(e) {
     e.preventDefault();
 
-    let { dispatch, form } = this.props;
-          let email = form.signUp.email.value;
-          let password = form.signUp.password.value;
-    //
-    var geocoder = new google.maps.Geocoder();
-    geocoder.geocode({ 'address': form.signUp.address.value}, function(res, status) {
-      if(status == 'OK') {
-        let user = {
-          email: form.signUp.email.value,
-          password: form.signUp.password.value,
-          profile: {
-            firstName: form.signUp.firstName.value,
-            lastName: form.signUp.lastName.value,
-            address: form.signUp.address.value,
-            latitude: res[0].geometry.viewport.f.b,
-            longitude: res[0].geometry.viewport.b.b,
-          }
+    let { form } = this.props;
+    let email = form.signUp.email.value;
+    let password = form.signUp.password.value;
+    let firstName = form.signUp.firstName.value;
+    let lastName = form.signUp.lastName.value;
+
+    superagent
+      .get('https://api:pubkey-252bed34819a680c8b154bf61ba4128b@api.mailgun.net/v3/address/validate')
+      .use(jsonp)
+      .query({
+        address: email
+      })
+      .end(function(err, res){
+        console.log(err, res)
+        if(!res.body.isValid) {
+          console.log('turrrrrible error: ', err);
+          alert('Invalid Email!')
+        } else {
+          console.log('yayyyyyyyyyza: ', res)
+          base.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+            var errorMessage = error.message;
+            if(errorMessage) {
+              alert(errorMessage)
+            }
+          }).then(function(user) {
+            base.database().ref('users/' + user.uid).set({
+              firstName: firstName,
+              lastName: lastName
+            });
+              browserHistory.push('/welcome')
+          });
         }
-        dispatch({
-          type: 'SIGN_UP',
-          payload: user
-        });
-      }
-    });
+      })
+
+
+
+
   }
 
   render() {

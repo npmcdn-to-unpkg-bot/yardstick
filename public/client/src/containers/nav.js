@@ -1,12 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 import { Navbar, Nav, NavItem } from 'react-bootstrap';
+import config from '../config';
+// import dog from '../dog';
+var Rebase = require('re-base');
+var base = Rebase.createClass(config);
+
 
 export default class Navigation extends Component{
   constructor(props){
     super(props);
     this.setUser = this.setUser.bind(this);
+    this.logOut = this.logOut.bind(this);
   }
 
   setUser(user) {
@@ -15,6 +21,14 @@ export default class Navigation extends Component{
       type: 'SET_USER',
       user: user
     });
+  }
+
+  logOut() {
+    base.auth().signOut().catch(function(err) {
+
+    }).then(function() {
+      browserHistory.push('/');
+    })
   }
 
   render() {
@@ -32,6 +46,7 @@ export default class Navigation extends Component{
               <Link to={"/profile/" + this.props.user.uid}>Profile</Link>
               <Link to={"/myExperiences/" + this.props.user.uid}>My Experiences</Link>
               <Link to={"/hosted/" + this.props.user.uid}>Host Dashboard</Link>
+              <a onClick={this.logOut}>Log Out</a>
             </Nav>
           </Navbar>
             <div className="content-main">
