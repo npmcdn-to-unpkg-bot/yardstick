@@ -27,14 +27,17 @@ class Welcome extends Component {
     this.changeLocation = this.changeLocation.bind(this);
     this.dismiss = this.dismiss.bind(this);
     this.changeUserLocation = this.changeUserLocation.bind(this);
-  }
-  componentWillMount() {
-    let { dispatch } = this.props;
-    this.setState({
+    this.state = {
       showInfo: false,
       changeModal: false
-    });
+    }
+  }
+  componentWillMount() {
+    
+  }
 
+  componentDidMount() {
+    let { dispatch } = this.props;
     if ("geolocation" in navigator) {
       /* geolocation is available */
       navigator.geolocation.getCurrentPosition(function(position) {
@@ -48,17 +51,8 @@ class Welcome extends Component {
       });
     } else {
       console.log('location thing not working')
-      // dispatch({
-      //   type: 'SET_LOCATION',
-      //   payload: {
-      //     latitude: Meteor.user().profile.latitude,
-      //     longitude: Meteor.user().profile.longitude
-      //   }
-      // });
+      
     }
-  }
-
-  componentDidMount() {
     this.ref = base.bindToState(`experiences`, {
       context: this,
       state: 'experiences',
