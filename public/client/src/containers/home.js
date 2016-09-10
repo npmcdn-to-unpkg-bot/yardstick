@@ -75,7 +75,7 @@ class Home extends Component{
     let email = this.props.form.signUp.email.value;
     // console.log('the email: ', email);
     if(!email.length) {
-      return; 
+      return;
     } else {
       superagent
       .get('https://api.mailgun.net/v3/address/validate')
@@ -91,7 +91,7 @@ class Home extends Component{
         } else {
           this.setState({ invalidEmail: false })
         }
-      });  
+      });
     }
   }
 
@@ -121,7 +121,7 @@ class Home extends Component{
     let password = form.signUp.password.value;
     let firstName = form.signUp.firstName.value;
     let lastName = form.signUp.lastName.value;
-    
+
     if(this.state.invalidEmail || this.state.invalidPassword) {
       return;
     } else {
@@ -131,17 +131,22 @@ class Home extends Component{
           alert(errorMessage)
         }
       }).then(function(user) {
+        user.updateProfile({
+          displayName: firstName
+        });
+
         base.database().ref('users/' + user.uid).set({
           firstName: firstName,
           lastName: lastName
         });
+        
         browserHistory.push('/welcome')
       });
     }
-    
 
 
-    
+
+
 
 
 

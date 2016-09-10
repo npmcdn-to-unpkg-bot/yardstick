@@ -1,3 +1,18 @@
+$light-green: #86CB92;
+$blue-green: #71B48D;
+$dark-green: #012622;
+$med-blue: #404E7C;
+$dark-blue: #251F47;
+$purple: #260F26;
+
+h4{
+  color: $dark-blue;
+}
+
+a{
+  color: $med-blue;
+}
+
 .signInForm{
   background-color: transparent;
   h4{
@@ -21,7 +36,7 @@
     }
     button{
       width: 30%;
-      background-color: #00A0FF;
+      background-color: $med-blue;
       border: none;
       color: #EEE;
     }
@@ -80,7 +95,7 @@
     button{
       width: 30%;
       border: none;
-      background-color: #00A0FF;
+      background-color: $med-blue;
       color: #EEE;
     }
     .input-field{
@@ -93,10 +108,12 @@
 }
 
 .hoverExp{
-  width: 600px;
+  max-width: 250px;
+  max-height: 300px;
   h5{
     cursor: pointer;
-    font-size: 18px;
+    font-size: 16px;
+    color: $dark-blue;
     text-decoration: underline;
   }
 }
@@ -138,13 +155,23 @@
     width: 100px;
     height: 40px;
     margin: 10px;
-    border: 3px solid black;
+    border: 3px solid $purple;
     background-color: transparent;
     font-size: 16px;
   }
 }
 .navbar .navbar-default{
+  background: $light-green;
   margin-bottom: 0;
+}
+#mainNav{
+  background: $light-green;
+  margin-bottom: 0;
+  background-image: none;
+  color: #EEE;
+  a{
+    color: #EEE;
+  }
 }
 
 .nav{
@@ -157,9 +184,7 @@
 }
 
 .map{
-  width: 1000px;
-  display: block;
-  margin: 50px auto;
+  padding: 20px;
 }
 
 .singleMap{

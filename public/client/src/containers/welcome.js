@@ -8,12 +8,7 @@ import { browserHistory } from 'react-router';
 import ChangeModal from '../components/welcome/changeModal';
 var Rebase = require('re-base');
 
-var config = {
-  apiKey: "AIzaSyAthBCq_uopCnlQn27DbBmQrHQVEJVfKRo",
-  authDomain: "outdoors-1380.firebaseapp.com",
-  databaseURL: "https://outdoors-1380.firebaseio.com",
-  storageBucket: "outdoors-1380.appspot.com",
-};
+import config from '../config';
 
 var base = Rebase.createClass(config);
 
@@ -32,9 +27,6 @@ class Welcome extends Component {
       changeModal: false
     }
   }
-  componentWillMount() {
-    
-  }
 
   componentDidMount() {
     let { dispatch } = this.props;
@@ -51,7 +43,7 @@ class Welcome extends Component {
       });
     } else {
       console.log('location thing not working')
-      
+
     }
     this.ref = base.bindToState(`experiences`, {
       context: this,
@@ -90,15 +82,11 @@ class Welcome extends Component {
 
 
   showDetail(marker) {
-    // console.log('da marker: ', marker)
     return(
       <InfoWindow
         onCloseclick={this.handleMarkerClose.bind(null, marker)}>
         <div className="hoverExp">
           <h5 onClick={() => {
-            // let newArray = this.state.experiences.map((exp) => {
-            //   exp.showInfo = false;
-            // });
             this.setState({
               experiences: null
             });
@@ -175,7 +163,15 @@ class Welcome extends Component {
 
     if(this.state.experiences && this.state.experiences.length > 0) {
       exp = this.state.experiences.map((exp) => {
-        return <div key={exp.key}><Link to={"/experiences/" + exp.key }>{exp.title}</Link></div>
+        return (
+          <div key={exp.key}>
+            <Link to={"/experiences/" + exp.key }>{exp.title}</Link>
+            <div>
+              {exp.images.map((img) => <img style={{ maxWidth: '100px', display: 'inline-block' }}src={img.url} />)}
+            </div>
+            <p>{exp.description}</p>
+          </div>
+        )
       })
     } else {
       exp = <div>Loading experiences...</div>
@@ -211,24 +207,32 @@ class Welcome extends Component {
           changeLocation={this.changeUserLocation}
         />
         <div className="welcomeInfo">
-          <p>Welcome! Choose a nearby experience from the map below, or add your own! <a href="#" onClick={this.changeLocation}>Change Location</a></p>
+          <p>Welcome! Choose an experience from the list or map below, or add your own! <a href="#" onClick={this.changeLocation}>Change Location</a></p>
         </div>
 
-        <div style={{ height: 1000 }} className="map">
-        <GoogleMapLoader
-        containerElement={<div style={{ height: `100%`  }} />}
-        googleMapElement={
-          <GoogleMap
-          ref={(map) => console.log(map)}
-          defaultZoom={7}
-          center={{ lat: this.props.location.latitude, lng: this.props.location.longitude }}
-          >
-            {markerSection}
-          </GoogleMap>
-          }
-        />
-        </div>
-        {exp}
+          <div className="row">
+
+            <div className="col-md-6 col-sm-12 expRow" style={{ padding: '20px' }}>
+              <h4>Experiences Near You</h4>
+            {exp}
+            </div>
+
+            <div style={{ height: '500px', padding: '20px' }} className="map col-md-6 col-sm-12">
+            <GoogleMapLoader
+            containerElement={<div style={{ height: `100%`, padding: '5%;'  }} />}
+            googleMapElement={
+              <GoogleMap
+              ref={(map) => console.log(map)}
+              defaultZoom={7}
+              center={{ lat: this.props.location.latitude, lng: this.props.location.longitude }}
+              >
+              {markerSection}
+              </GoogleMap>
+            }
+            />
+            </div>
+
+          </div>
         </div>
       )
     }

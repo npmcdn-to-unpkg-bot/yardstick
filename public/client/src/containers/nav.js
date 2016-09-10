@@ -13,6 +13,18 @@ export default class Navigation extends Component{
     super(props);
     this.setUser = this.setUser.bind(this);
     this.logOut = this.logOut.bind(this);
+    this.state = {
+      user: {}
+    }
+  }
+
+  componentDidMount() {
+    let user = base.auth().currentUser;
+    if(user != null) {
+      this.setState({
+        user: user
+      });
+    }
   }
 
   setUser(user) {
@@ -34,10 +46,10 @@ export default class Navigation extends Component{
   render() {
       return (
         <div>
-          <Navbar>
+          <Navbar id="mainNav">
             <Navbar.Header>
               <Navbar.Brand>
-                <Link to="/welcome">Welcome!</Link>
+                <Link to="/welcome">{ this.state.user.displayName ? 'Welcome, ' + this.state.user.displayName : 'Welcome!'}</Link>
               </Navbar.Brand>
             </Navbar.Header>
             <Nav>

@@ -45,6 +45,7 @@ class CreateExp extends Component {
           payload: {
             title: form.title.value,
             description: form.description.value,
+            category: form.type.value,
             images: images,
             address: form.address.value,
             city: form.city.value,
@@ -56,7 +57,8 @@ class CreateExp extends Component {
             unavailableDates: dates.unavailableDates
           }
         })
-
+      } else {
+        alert('Error creating experience, please try again!')
       }
     })
   }
